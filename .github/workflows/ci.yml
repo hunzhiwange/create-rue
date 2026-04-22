@@ -1,4 +1,4 @@
-ci.ymlname: 'ci'
+name: 'ci'
 on:
   push:
     branches:
@@ -63,7 +63,7 @@ jobs:
           # ----- Build: TypeScript projects (sampled) -----
           # Covers key tsconfig variations:
           #   typescript          - minimal base case
-          #   typescript-jsx      - adds the vueJsx vite plugin
+          #   typescript-jsx      - adds the rueJsx vite plugin
           #   typescript-*-vitest - adds tsconfig.vitest.json reference
           #   typescript-*-cypress - adds Cypress tsconfig files/references
           #   typescript-*-playwright - adds tsconfig.playwright.json
