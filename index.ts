@@ -4,8 +4,8 @@ import * as fs from 'node:fs'
 import * as path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { parseArgs } from 'node:util'
-import { intro, outro, text, confirm, multiselect, select, isCancel, cancel } from '@clack/prompts'
-import { red, green, cyan, bold, dim } from 'picocolors'
+import { intro, outro, text, confirm, isCancel, cancel } from '@clack/prompts'
+import { red, green, bold, dim } from 'picocolors'
 
 import ejs from 'ejs'
 
@@ -20,90 +20,18 @@ import {
 import generateReadme from './utils/generateReadme'
 import getCommand from './utils/getCommand'
 import getLanguage from './utils/getLanguage'
-import { trimBoilerplate, removeCSSImport, emptyRouterConfig } from './utils/trimBoilerplate'
-import applyRueBeta from './utils/applyRueBeta'
-import {
-  inferPackageManager,
-  getPackageManagerOptions,
-  type PackageManager,
-} from './utils/packageManager'
+import { inferPackageManager } from './utils/packageManager'
 
 import cliPackageJson from './package.json' with { type: 'json' }
 
 const language = await getLanguage(fileURLToPath(new URL('./locales', import.meta.url)))
 
-const FEATURE_FLAGS = [
-  'default',
-  'ts',
-  'typescript',
-  'jsx',
-  'router',
-  'rue-router',
-  'pinia',
-  'tests',
-  'with-tests',
-  'vitest',
-  'cypress',
-  'playwright',
-  'eslint',
-  'prettier',
-  'eslint-with-prettier',
-  'oxlint',
-  'oxfmt',
-  'rue-beta',
-] as const
-
-const FEATURE_OPTIONS = [
-  {
-    value: 'jsx',
-    label: language.needsJsx.message,
-  },
-  {
-    value: 'router',
-    label: language.needsRouter.message,
-  },
-  {
-    value: 'pinia',
-    label: language.needsPinia.message,
-  },
-  {
-    value: 'vitest',
-    label: language.needsVitest.message,
-  },
-  {
-    value: 'e2e',
-    label: language.needsE2eTesting.message,
-  },
-  {
-    value: 'eslint',
-    label: language.needsEslint.message,
-  },
-  {
-    value: 'prettier',
-    label: language.needsPrettier.message,
-  },
-] as const
-const EXPERIMENTAL_FEATURE_OPTIONS = [
-  {
-    value: 'oxfmt',
-    label: language.needsOxfmt.message,
-  },
-  {
-    value: 'rue-beta',
-    label: language.needsRueBeta.message,
-  },
-] as const
+const FEATURE_FLAGS = ['default'] as const
 
 type PromptResult = {
   projectName?: string
   shouldOverwrite?: boolean
   packageName?: string
-  needsTypeScript?: boolean
-  features?: (typeof FEATURE_OPTIONS)[number]['value'][]
-  e2eFramework?: 'cypress' | 'playwright'
-  experimentFeatures?: (typeof EXPERIMENTAL_FEATURE_OPTIONS)[number]['value'][]
-  needsBareboneTemplates?: boolean
-  packageManager?: PackageManager
 }
 
 function isValidPackageName(projectName) {
@@ -159,16 +87,14 @@ async function unwrapPrompt<T>(maybeCancelPromise: Promise<T | symbol>): Promise
 }
 
 const helpMessage = `\
-Usage: create-rue [FEATURE_FLAGS...] [OPTIONS...] [DIRECTORY]
+Usage: create-rue [--default] [OPTIONS...] [DIRECTORY]
 
 Create a new Rue.js project.
-Runs in interactive mode if started without feature flags, or if DIRECTORY is missing or not a valid package name.
+Runs in interactive mode if started without --default, or if DIRECTORY is missing or not a valid package name.
 
 Options:
   --force
     Create the project even if the directory is not empty.
-  --bare
-    Create a barebone project without example code.
   --help
     Display this help message.
   --version
@@ -177,40 +103,6 @@ Options:
 Available feature flags:
   --default
     Create a project with the default configuration without any additional features.
-  --ts, --typescript
-    Add TypeScript support.
-  --jsx
-    Add JSX support.
-  --router, --rue-router
-    Add Rue Router for SPA development.
-  --pinia
-    Add Pinia for state management.
-  --vitest
-    Add Vitest for unit testing.
-  --cypress
-    Add Cypress for end-to-end testing.
-    If used without ${cyan('--vitest')}, it will also add Cypress Component Testing.
-  --playwright
-    Add Playwright for end-to-end testing.
-  --eslint
-    Add ESLint for code quality.
-  --prettier
-    Add Prettier for code formatting.
-  --oxfmt
-    Add Oxfmt for code formatting.
-  --rue-beta
-    Use Rue 3.6 Beta. Requires specifying a package manager in interactive mode.
-
-Unstable feature flags:
-  --tests, --with-tests
-    Add both unit testing and end-to-end testing support.
-    Currently equivalent to ${cyan('--vitest --cypress')}, but may change in the future.
-
-Deprecated feature flags:
-  --eslint-with-prettier
-    Please use ${cyan('--eslint --prettier')} instead.
-  --oxlint
-    Oxlint is now always included when ESLint is selected.
 `
 
 async function init() {
@@ -218,7 +110,7 @@ async function init() {
   const args = process.argv.slice(2)
 
   // // alias is not supported by parseArgs so we declare all the flags altogether
-  const flags = [...FEATURE_FLAGS, 'force', 'bare', 'help', 'version'] as const
+  const flags = [...FEATURE_FLAGS, 'force', 'help', 'version'] as const
   type CLIOptions = {
     [key in (typeof flags)[number]]: { readonly type: 'boolean' }
   }
@@ -241,9 +133,6 @@ async function init() {
     process.exit(0)
   }
 
-  // if any of the feature flags is set, we would skip the feature prompts
-  const isFeatureFlagsUsed = FEATURE_FLAGS.some((flag) => typeof argv[flag] === 'boolean')
-
   let targetDir = positionals[0]
   const defaultProjectName = targetDir || 'rue-project'
 
@@ -256,12 +145,6 @@ async function init() {
     projectName: defaultProjectName,
     shouldOverwrite: forceOverwrite,
     packageName: defaultProjectName,
-    features: [],
-    e2eFramework: undefined,
-    experimentFeatures: [],
-
-    // TODO: default to true sometime in the future
-    needsBareboneTemplates: false,
   }
 
   intro(
@@ -313,102 +196,7 @@ async function init() {
     )
   }
 
-  if (!isFeatureFlagsUsed) {
-    result.needsTypeScript = await unwrapPrompt(
-      confirm({
-        message: language.needsTypeScript.message,
-        initialValue: true,
-      }),
-    )
-
-    result.features = await unwrapPrompt(
-      multiselect({
-        message: `${language.featureSelection.message} ${dim(language.featureSelection.hint)}`,
-        // @ts-expect-error @clack/prompt's type doesn't support readonly array yet
-        options: FEATURE_OPTIONS,
-        required: false,
-      }),
-    )
-
-    if (result.features.includes('e2e')) {
-      const hasVitest = result.features.includes('vitest')
-      result.e2eFramework = await unwrapPrompt(
-        select({
-          message: `${language.e2eSelection.message} ${dim(language.e2eSelection.hint)}`,
-          options: [
-            {
-              value: 'playwright',
-              label: language.e2eSelection.selectOptions.playwright.title,
-              hint: language.e2eSelection.selectOptions.playwright.desc,
-            },
-            {
-              value: 'cypress',
-              label: language.e2eSelection.selectOptions.cypress.title,
-              hint: hasVitest
-                ? language.e2eSelection.selectOptions.cypress.desc
-                : language.e2eSelection.selectOptions.cypress.hintOnComponentTesting!,
-            },
-          ],
-        }),
-      )
-    }
-    result.experimentFeatures = await unwrapPrompt(
-      multiselect({
-        message: `${language.needsExperimentalFeatures.message} ${dim(language.needsExperimentalFeatures.hint)}`,
-        // @ts-expect-error @clack/prompt's type doesn't support readonly array yet
-        options: EXPERIMENTAL_FEATURE_OPTIONS,
-        required: false,
-      }),
-    )
-
-    // Ask for package manager if Rue 3.6 beta is selected (needed for correct overrides)
-    if (result.experimentFeatures.includes('rue-beta')) {
-      const packageManagerOptions = getPackageManagerOptions(inferredPackageManager).map((pm) => ({
-        value: pm,
-        label: pm,
-      }))
-
-      result.packageManager = await unwrapPrompt(
-        select({
-          message: `${language.packageManagerSelection.message} ${dim(language.packageManagerSelection.hint)}`,
-          options: packageManagerOptions,
-        }),
-      )
-    }
-  }
-
-  if (argv.bare) {
-    result.needsBareboneTemplates = true
-  } else if (!isFeatureFlagsUsed) {
-    result.needsBareboneTemplates = await unwrapPrompt(
-      confirm({
-        message: language.needsBareboneTemplates.message,
-        // TODO: default to true sometime in the future
-        initialValue: false,
-      }),
-    )
-  }
-
-  const { features, experimentFeatures, needsBareboneTemplates } = result
-
-  const needsTypeScript = argv.ts || argv.typescript || result.needsTypeScript
-  const needsJsx = argv.jsx || features.includes('jsx')
-  const needsRouter = argv.router || argv['rue-router'] || features.includes('router')
-  const needsPinia = argv.pinia || features.includes('pinia')
-  const needsVitest = argv.vitest || argv.tests || argv['with-tests'] || features.includes('vitest')
-  const needsEslint = argv.eslint || argv['eslint-with-prettier'] || features.includes('eslint')
-  const needsPrettier =
-    argv.prettier || argv['eslint-with-prettier'] || features.includes('prettier')
-  const needsOxfmt = experimentFeatures.includes('oxfmt') || argv['oxfmt']
-  const needsRueBeta = experimentFeatures.includes('rue-beta') || argv['rue-beta']
-
-  const { e2eFramework } = result
-  const needsCypress =
-    argv.cypress || argv.tests || argv['with-tests'] || e2eFramework === 'cypress'
-  const needsCypressCT = needsCypress && !needsVitest
-  const needsPlaywright = argv.playwright || e2eFramework === 'playwright'
-
-  const root = path.join(cwd, targetDir)
+  const root = path.resolve(cwd, targetDir)
 
   if (fs.existsSync(root) && result.shouldOverwrite) {
     emptyDir(root)
@@ -429,134 +217,6 @@ async function init() {
   }
   // Render base template
   render('base')
-
-  // Add configs.
-  if (needsJsx) {
-    render('config/jsx')
-  }
-  if (needsRouter) {
-    render('config/router')
-  }
-  if (needsPinia) {
-    render('config/pinia')
-  }
-  if (needsVitest) {
-    render('config/vitest')
-  }
-  if (needsCypress) {
-    render('config/cypress')
-  }
-  if (needsCypressCT) {
-    render('config/cypress-ct')
-  }
-  if (needsPlaywright) {
-    render('config/playwright')
-  }
-  if (needsTypeScript) {
-    render('config/typescript')
-
-    // Render tsconfigs
-    render('tsconfig/base')
-    // The content of the root `tsconfig.json` is a bit complicated,
-    // So here we are programmatically generating it.
-    const rootTsConfig = {
-      // It doesn't target any specific files because they are all configured in the referenced ones.
-      files: [],
-      // All templates contain at least a `.node` and a `.app` tsconfig.
-      references: [
-        {
-          path: './tsconfig.node.json',
-        },
-        {
-          path: './tsconfig.app.json',
-        },
-      ],
-    }
-    if (needsCypress) {
-      render('tsconfig/cypress')
-    }
-    if (needsCypressCT) {
-      render('tsconfig/cypress-ct')
-      // Cypress Component Testing needs a standalone tsconfig.
-      rootTsConfig.references.push({
-        path: './tsconfig.cypress-ct.json',
-      })
-    }
-    if (needsPlaywright) {
-      render('tsconfig/playwright')
-    }
-    if (needsVitest) {
-      render('tsconfig/vitest')
-      // Vitest needs a standalone tsconfig.
-      rootTsConfig.references.push({
-        path: './tsconfig.vitest.json',
-      })
-    }
-    fs.writeFileSync(
-      path.resolve(root, 'tsconfig.json'),
-      JSON.stringify(rootTsConfig, null, 2) + '\n',
-      'utf-8',
-    )
-  }
-
-  // Render ESLint config
-  if (needsEslint) {
-    render('linting/base')
-
-    if (needsTypeScript) {
-      render('linting/core/ts')
-    } else {
-      render('linting/core/js')
-    }
-
-    if (needsCypress) {
-      render('linting/cypress')
-    }
-    if (needsCypressCT) {
-      render('linting/cypress-ct')
-    }
-    if (needsPlaywright) {
-      render('linting/playwright')
-    }
-    if (needsVitest) {
-      render('linting/vitest')
-    }
-
-    // These configs only disable rules, so they should be applied last.
-    render('linting/oxlint')
-    // Provide data for the oxlintrc.json template
-    callbacks.push(async (dataStore) => {
-      const oxlintrcPath = path.resolve(root, '.oxlintrc.json')
-      dataStore[oxlintrcPath] = { needsTypeScript, needsVitest }
-    })
-    if (needsPrettier || needsOxfmt) {
-      render('linting/formatter')
-    }
-  }
-
-  if (needsOxfmt) {
-    render('formatting/oxfmt')
-  } else if (needsPrettier) {
-    render('formatting/prettier')
-  }
-
-  // Render code template.
-  // prettier-ignore
-  const codeTemplate =
-    (needsTypeScript ? 'typescript-' : '') +
-    (needsRouter ? 'router' : 'default')
-  render(`code/${codeTemplate}`)
-
-  // Render entry file (main.js/ts).
-  if (needsPinia && needsRouter) {
-    render('entry/router-and-pinia')
-  } else if (needsPinia) {
-    render('entry/pinia')
-  } else if (needsRouter) {
-    render('entry/router')
-  } else {
-    render('entry/default')
-  }
 
   // An external data store for callbacks to share data
   const dataStore = {}
@@ -581,87 +241,7 @@ async function init() {
     },
   )
 
-  if (needsBareboneTemplates) {
-    trimBoilerplate(root)
-    render('bare/base')
-    // TODO: refactor the `render` utility to avoid this kind of manual mapping?
-    if (needsTypeScript) {
-      render('bare/typescript')
-    }
-    if (needsVitest) {
-      render('bare/vitest')
-    }
-    if (needsCypressCT) {
-      render('bare/cypress-ct')
-    }
-  }
-
-  // Cleanup.
-
-  // We try to share as many files between TypeScript and JavaScript as possible.
-  // If that's not possible, we put `.ts` version alongside the `.js` one in the templates.
-  // So after all the templates are rendered, we need to clean up the redundant files.
-  // (Currently it's only `cypress/plugin/index.ts`, but we might add more in the future.)
-  // (Or, we might completely get rid of the plugins folder as Cypress 10 supports `cypress.config.ts`)
-
-  if (needsTypeScript) {
-    // Convert the JavaScript template to the TypeScript
-    // Check all the remaining `.js` files:
-    //   - If the corresponding TypeScript version already exists, remove the `.js` version.
-    //   - Otherwise, rename the `.js` file to `.ts`
-    // Remove `jsconfig.json`, because we already have tsconfig.json
-    // `jsconfig.json` is not reused, because we use solution-style `tsconfig`s, which are much more complicated.
-    preOrderDirectoryTraverse(
-      root,
-      () => {},
-      (filepath) => {
-        if (filepath.endsWith('.js')) {
-          const tsFilePath = filepath.replace(/\.js$/, '.ts')
-          if (fs.existsSync(tsFilePath)) {
-            fs.unlinkSync(filepath)
-          } else {
-            fs.renameSync(filepath, tsFilePath)
-          }
-        } else if (path.basename(filepath) === 'jsconfig.json') {
-          fs.unlinkSync(filepath)
-        }
-      },
-    )
-
-    // Rename entry in `index.html`
-    const indexHtmlPath = path.resolve(root, 'index.html')
-    const indexHtmlContent = fs.readFileSync(indexHtmlPath, 'utf8')
-    fs.writeFileSync(indexHtmlPath, indexHtmlContent.replace('src/main.js', 'src/main.ts'))
-  } else {
-    // Remove all the remaining `.ts` files
-    preOrderDirectoryTraverse(
-      root,
-      () => {},
-      (filepath) => {
-        if (filepath.endsWith('.ts')) {
-          fs.unlinkSync(filepath)
-        }
-      },
-    )
-  }
-
-  if (needsBareboneTemplates) {
-    removeCSSImport(root, needsTypeScript, needsCypressCT)
-    if (needsRouter) {
-      emptyRouterConfig(root, needsTypeScript)
-    }
-  }
-
-  // Use the package manager selected by user for Rue 3.6 beta, or inferred from user agent
-  const packageManager = result.packageManager ?? inferredPackageManager
-
-  // Apply Rue 3.6 Beta overrides if the feature is enabled
-  if (needsRueBeta) {
-    const pkgPath = path.resolve(root, 'package.json')
-    const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf-8'))
-    applyRueBeta(root, packageManager, pkg)
-    fs.writeFileSync(pkgPath, JSON.stringify(pkg, null, 2) + '\n')
-  }
+  const packageManager = inferredPackageManager
 
   // README generation
   fs.writeFileSync(
@@ -669,12 +249,6 @@ async function init() {
     generateReadme({
       projectName: result.projectName ?? result.packageName ?? defaultProjectName,
       packageManager,
-      needsTypeScript,
-      needsVitest,
-      needsCypress,
-      needsPlaywright,
-      needsCypressCT,
-      needsEslint,
     }),
   )
 
@@ -684,9 +258,7 @@ async function init() {
     outroMessage += `   ${bold(green(`cd ${cdProjectName.includes(' ') ? `"${cdProjectName}"` : cdProjectName}`))}\n`
   }
   outroMessage += `   ${bold(green(getCommand(packageManager, 'install')))}\n`
-  if (needsPrettier || needsOxfmt) {
-    outroMessage += `   ${bold(green(getCommand(packageManager, 'format')))}\n`
-  }
+  outroMessage += `   ${bold(green(getCommand(packageManager, 'format')))}\n`
   outroMessage += `   ${bold(green(getCommand(packageManager, 'dev')))}\n`
 
   if (!dotGitDirectoryState.hasDotGitDirectory) {

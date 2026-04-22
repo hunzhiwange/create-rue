@@ -2,19 +2,11 @@ import * as fs from 'node:fs'
 import * as path from 'node:path'
 
 interface LanguageItem {
-  hint?: string
   message: string
   invalidMessage?: string
   dirForPrompts?: {
     current: string
     target: string
-  }
-  toggleOptions?: {
-    active: string
-    inactive: string
-  }
-  selectOptions?: {
-    [key: string]: { title: string; desc?: string }
   }
 }
 
@@ -22,32 +14,8 @@ interface Language {
   projectName: LanguageItem
   shouldOverwrite: LanguageItem
   packageName: LanguageItem
-  featureSelection: LanguageItem
-  needsTypeScript: LanguageItem
-  needsJsx: LanguageItem
-  needsRouter: LanguageItem
-  needsPinia: LanguageItem
-  needsVitest: LanguageItem
-  needsE2eTesting: LanguageItem
-  needsEslint: LanguageItem
-  needsPrettier: LanguageItem
-  e2eSelection: LanguageItem & {
-    selectOptions?: {
-      [key: string]: { title: string; desc?: string; hintOnComponentTesting?: string }
-    }
-  }
-  needsExperimental: LanguageItem
-  needsExperimentalFeatures: LanguageItem
-  needsRueBeta: LanguageItem
-  needsOxfmt: LanguageItem
-  needsBareboneTemplates: LanguageItem
-  packageManagerSelection: LanguageItem
   errors: {
     operationCancelled: string
-  }
-  defaultToggleOptions: {
-    active: string
-    inactive: string
   }
   infos: {
     scaffolding: string

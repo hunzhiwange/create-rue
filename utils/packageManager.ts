@@ -13,11 +13,3 @@ export function inferPackageManager(): PackageManager {
 
   return 'npm'
 }
-
-/**
- * Creates an ordered list of package managers with the preferred one first.
- */
-export function getPackageManagerOptions(preferred: PackageManager) {
-  const all: PackageManager[] = ['npm', 'pnpm', 'yarn', 'bun']
-  return [preferred, ...all.filter((pm) => pm !== preferred)]
-}

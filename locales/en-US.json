@@ -14,72 +14,8 @@
     "message": "Package name:",
     "invalidMessage": "Invalid package.json name"
   },
-  "featureSelection": {
-    "message": "Select features to include in your project:",
-    "hint": "(↑/↓ to navigate, space to select, a to toggle all, enter to confirm)"
-  },
-  "needsTypeScript": {
-    "message": "Use TypeScript?"
-  },
-  "needsJsx": {
-    "message": "JSX Support"
-  },
-  "needsRouter": {
-    "message": "Router (SPA development)"
-  },
-  "needsPinia": {
-    "message": "Pinia (state management)"
-  },
-  "needsVitest": {
-    "message": "Vitest (unit testing)"
-  },
-  "needsE2eTesting": {
-    "message": "End-to-End Testing"
-  },
-  "needsEslint": {
-    "message": "Linter (error prevention)"
-  },
-  "needsPrettier": {
-    "message": "Prettier (code formatting)"
-  },
-  "e2eSelection": {
-    "message": "Select an End-to-End testing framework:",
-    "hint": "(↑/↓ to navigate, enter to confirm)",
-    "selectOptions": {
-      "playwright": { "title": "Playwright", "desc": "https://playwright.dev/" },
-      "cypress": {
-        "title": "Cypress",
-        "desc": "https://www.cypress.io/",
-        "hintOnComponentTesting": "also supports unit testing with Cypress Component Testing - https://www.cypress.io/"
-      }
-    }
-  },
-  "needsExperimental": {
-    "message": "Enable experimental features"
-  },
-  "needsExperimentalFeatures": {
-    "message": "Select experimental features to include in your project:",
-    "hint": "(↑/↓ to navigate, space to select, a to toggle all, enter to confirm)"
-  },
-  "needsRueBeta": {
-    "message": "Rue 3.6 (beta)"
-  },
-  "needsOxfmt": {
-    "message": "Replace Prettier with Oxfmt"
-  },
-  "needsBareboneTemplates": {
-    "message": "Skip all example code and start with a blank Rue project?"
-  },
-  "packageManagerSelection": {
-    "message": "Which package manager will you use?",
-    "hint": "(Rue 3.6 beta requires version overrides that differ per package manager)"
-  },
   "errors": {
     "operationCancelled": "Operation cancelled"
-  },
-  "defaultToggleOptions": {
-    "active": "Yes",
-    "inactive": "No"
   },
   "infos": {
     "scaffolding": "Scaffolding project in",

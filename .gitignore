@@ -31,7 +31,6 @@ Thumbs.db
 !.env.example
 *.tsbuildinfo
 nyc_output/
-.playwright-report/
 test-results/
 coverage/
 .vapor-tmp/

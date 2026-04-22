@@ -14,72 +14,8 @@
     "message": "Nom du package\u00a0:",
     "invalidMessage": "Le nom du package.json est invalide"
   },
-  "featureSelection": {
-    "message": "Sélectionnez les fonctionnalités à inclure dans votre projet\u00a0:",
-    "hint": "(↑/↓ pour naviguer, espace pour sélectionner, a pour tout sélectionner, entrée pour confirmer)"
-  },
-  "needsTypeScript": {
-    "message": "Utiliser TypeScript\u00a0?"
-  },
-  "needsJsx": {
-    "message": "Support de JSX"
-  },
-  "needsRouter": {
-    "message": "Router (développement SPA)"
-  },
-  "needsPinia": {
-    "message": "Pinia (gestion de l'état)"
-  },
-  "needsVitest": {
-    "message": "Vitest (tests unitaires)"
-  },
-  "needsE2eTesting": {
-    "message": "Tests de bout en bout"
-  },
-  "needsEslint": {
-    "message": "Linter (prévention des erreurs)"
-  },
-  "needsPrettier": {
-    "message": "Prettier (formatage du code)"
-  },
-  "e2eSelection": {
-    "message": "Sélectionnez un framework de test de bout en bout\u00a0:",
-    "hint": "(↑/↓ pour naviguer, entrée pour confirmer)",
-    "selectOptions": {
-      "playwright": { "title": "Playwright", "desc": "https://playwright.dev/" },
-      "cypress": {
-        "title": "Cypress",
-        "desc": "https://www.cypress.io/",
-        "hintOnComponentTesting": "prend également en charge les tests unitaires avec Cypress Component Testing - https://www.cypress.io/"
-      }
-    }
-  },
-  "needsExperimental": {
-    "message": "Activer les fonctionnalités expérimentales"
-  },
-  "needsExperimentalFeatures": {
-    "message": "Sélectionnez les fonctionnalités expérimentales à inclure\u00a0:",
-    "hint": "(↑/↓ pour naviguer, espace pour sélectionner, a pour tout sélectionner, entrée pour confirmer)"
-  },
-  "needsRueBeta": {
-    "message": "Rue 3.6 (beta)"
-  },
-  "needsOxfmt": {
-    "message": "Remplacer Prettier par Oxfmt"
-  },
-  "needsBareboneTemplates": {
-    "message": "Ignorer tout le code d'exemple et commencer avec un projet Rue vierge\u00a0?"
-  },
-  "packageManagerSelection": {
-    "message": "Quel gestionnaire de paquets allez-vous utiliser\u00a0?",
-    "hint": "(Rue 3.6 beta nécessite des surcharges de version spécifiques au gestionnaire de paquets)"
-  },
   "errors": {
     "operationCancelled": "Operation annulée"
-  },
-  "defaultToggleOptions": {
-    "active": "Oui",
-    "inactive": "Non"
   },
   "infos": {
     "scaffolding": "Génération du projet dans",
