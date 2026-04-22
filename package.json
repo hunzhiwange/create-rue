@@ -18,6 +18,7 @@
   },
   "files": [
     "bundle.js",
+    "locales",
     "template",
     "!template/**/node_modules/.bin/*"
   ],
