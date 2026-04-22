@@ -4,7 +4,7 @@ import type { PackageManager } from './packageManager'
 
 // Core Rue packages that need to be overridden
 // Based on https://github.com/haoqunjiang/install-rue/blob/main/src/constants.ts
-const CORE_VUE_PACKAGES = [
+const CORE_RUE_PACKAGES = [
   'rue',
   '@rue/compiler-core',
   '@rue/compiler-dom',
@@ -21,7 +21,7 @@ const CORE_VUE_PACKAGES = [
 ] as const
 
 function generateOverridesMap(): Record<string, string> {
-  return Object.fromEntries(CORE_VUE_PACKAGES.map((name) => [name, 'beta']))
+  return Object.fromEntries(CORE_RUE_PACKAGES.map((name) => [name, 'beta']))
 }
 
 /**
@@ -48,7 +48,7 @@ export default function applyRueBeta(
     }
 
     // NPM requires direct dependencies to be rewritten to match overrides
-    for (const dependencyName of CORE_VUE_PACKAGES) {
+    for (const dependencyName of CORE_RUE_PACKAGES) {
       for (const dependencyType of ['dependencies', 'devDependencies', 'optionalDependencies']) {
         if (pkg[dependencyType]?.[dependencyName]) {
           pkg[dependencyType][dependencyName] = overrides[dependencyName]
