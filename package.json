@@ -1,6 +1,6 @@
 {
   "name": "create-rue",
-  "version": "0.0.4",
+  "version": "0.0.6",
   "description": "🛠️ The recommended way to start a Vite-powered Rue project",
   "keywords": [],
   "homepage": "https://github.com/hunzhiwange/create-rue#readme",
@@ -25,7 +25,7 @@
   "type": "module",
   "publishConfig": {
     "access": "public",
-    "provenance": true
+    "provenance": false
   },
   "scripts": {
     "prepare": "vp config",

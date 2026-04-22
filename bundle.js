@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-/*! create-rue v0.0.1 | MIT */
+/*! create-rue v0.0.4 | MIT */
 import { createRequire } from "node:module";
 import * as fs from "node:fs";
 import "node:fs";
@@ -2458,7 +2458,7 @@ function getPackageManagerOptions(preferred) {
 //#endregion
 //#region package.json
 var name = "create-rue";
-var version = "0.0.1";
+var version = "0.0.4";
 //#endregion
 //#region index.ts
 const language = await getLanguage(fileURLToPath(new URL("./locales", import.meta.url)));
