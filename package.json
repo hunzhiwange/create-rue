@@ -1,0 +1,59 @@
+{
+  "name": "create-rue",
+  "version": "0.0.1",
+  "description": "🛠️ The recommended way to start a Vite-powered Rue project",
+  "keywords": [],
+  "homepage": "https://github.com/hunzhiwange/create-rue#readme",
+  "bugs": {
+    "url": "https://github.com/hunzhiwange/create-rue/issues"
+  },
+  "license": "MIT",
+  "author": "XiangminLiu <xiangminliu1990@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hunzhiwange/create-rue.git"
+  },
+  "bin": {
+    "create-rue": "bundle.js"
+  },
+  "files": [
+    "bundle.js",
+    "template",
+    "!template/**/node_modules/.bin/*"
+  ],
+  "type": "module",
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "scripts": {
+    "prepare": "vp config",
+    "format": "vp fmt",
+    "format-check": "vp fmt --check",
+    "lint": "vp lint . --fix",
+    "build": "rolldown -c rolldown.config.ts",
+    "snapshot": "zx ./scripts/snapshot.mjs",
+    "pretest": "pnpm run build && pnpm run snapshot",
+    "test": "zx ./scripts/test.mjs",
+    "test:unit": "vp test",
+    "preversion": "git fetch && git status -uno | grep -q 'Your branch is up to date'",
+    "postversion": "zx ./scripts/postversion.mjs",
+    "prepublishOnly": "pnpm run build"
+  },
+  "devDependencies": {
+    "@clack/prompts": "^1.2.0",
+    "@tsconfig/node24": "^24.0.4",
+    "@types/node": "^24.12.2",
+    "ejs": "^3.1.10",
+    "picocolors": "^1.1.1",
+    "rolldown": "1.0.0-rc.16",
+    "rollup-plugin-license": "^3.7.1",
+    "vite-plus": "catalog:",
+    "vitest": "catalog:",
+    "zx": "^8.8.5"
+  },
+  "engines": {
+    "node": "^20.19.0 || >=22.12.0"
+  },
+  "packageManager": "pnpm@10.33.0"
+}
