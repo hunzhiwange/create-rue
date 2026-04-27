@@ -3,9 +3,8 @@ import { createRouter, createWebHashHistory } from '@rue-js/router'
 
 const routes = [
   { path: '/', component: useComponent(() => import('./pages/Home')) },
-  { path: '/guide', component: useComponent(() => import('./pages/Guide')) },
-  { path: '/packages', component: useComponent(() => import('./pages/Packages')) },
-  { path: '/ecosystem', component: useComponent(() => import('./pages/Ecosystem')) },
+  { path: '/report', component: useComponent(() => import('./pages/Report')) },
+  { path: '/todo', component: useComponent(() => import('./pages/TodoApp')) },
 ]
 
 export default createRouter({
