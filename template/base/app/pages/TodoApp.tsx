@@ -1,4 +1,4 @@
-import { computed, type FC, ref, watch } from '@rue-js/rue'
+import { computed, type FC, ref, useState, watch } from '@rue-js/rue'
 import { RouterLink } from '@rue-js/router'
 
 const todoStorageKey = 'rue.base.todos'
@@ -117,13 +117,48 @@ const statusMeta: Record<
   },
 }
 
+const EditingTitleInput: FC<{
+  initialTitle: string
+  onSave: (title: string) => void
+  onCancel: () => void
+}> = props => {
+  const [title, setTitle] = useState(props.initialTitle)
+
+  return (
+    <div className="flex flex-col gap-3 sm:flex-row">
+      <input
+        className="input input-bordered w-full"
+        value={title.value}
+        onInput={(event: any) => {
+          setTitle((event.target as HTMLInputElement).value)
+        }}
+        onKeydown={(event: KeyboardEvent) => {
+          if (event.key === 'Enter') {
+            props.onSave(title.value.trim())
+          }
+          if (event.key === 'Escape') {
+            props.onCancel()
+          }
+        }}
+      />
+      <div className="flex gap-2">
+        <button className="btn btn-primary btn-sm" onClick={() => props.onSave(title.value.trim())}>
+          保存
+        </button>
+        <button className="btn btn-ghost btn-sm" onClick={props.onCancel}>
+          取消
+        </button>
+      </div>
+    </div>
+  )
+}
+
 const TodoApp: FC = () => {
   const todos = ref<TodoItem[]>(getStoredTodos())
   const draft = ref('')
   const search = ref('')
   const activeFilter = ref<TodoFilter>('all')
   const editingId = ref<number | null>(null)
-  const editingTitle = ref('')
   const nextId = ref(getNextTodoId(todos.value))
 
   watch(
@@ -190,7 +225,6 @@ const TodoApp: FC = () => {
     todos.value = todos.value.filter(item => item.id !== id)
     if (editingId.value === id) {
       editingId.value = null
-      editingTitle.value = ''
     }
   }
 
@@ -208,16 +242,13 @@ const TodoApp: FC = () => {
 
   const startEditing = (item: TodoItem) => {
     editingId.value = item.id
-    editingTitle.value = item.title
   }
 
   const cancelEditing = () => {
     editingId.value = null
-    editingTitle.value = ''
   }
 
-  const saveEditing = (id: number) => {
-    const title = editingTitle.value.trim()
+  const saveEditing = (id: number, title: string) => {
     if (!title) {
       return
     }
@@ -369,31 +400,12 @@ const TodoApp: FC = () => {
                       )}
 
                       {isEditing && (
-                        <div className="flex flex-col gap-3 sm:flex-row">
-                          <input
-                            className="input input-bordered w-full"
-                            value={editingTitle.value}
-                            onInput={(event: any) => {
-                              editingTitle.value = (event.target as HTMLInputElement).value
-                            }}
-                            onKeydown={(event: KeyboardEvent) => {
-                              if (event.key === 'Enter') {
-                                saveEditing(item.id)
-                              }
-                              if (event.key === 'Escape') {
-                                cancelEditing()
-                              }
-                            }}
-                          />
-                          <div className="flex gap-2">
-                            <button className="btn btn-primary btn-sm" onClick={() => saveEditing(item.id)}>
-                              保存
-                            </button>
-                            <button className="btn btn-ghost btn-sm" onClick={cancelEditing}>
-                              取消
-                            </button>
-                          </div>
-                        </div>
+                        <EditingTitleInput
+                          key={item.id}
+                          initialTitle={item.title}
+                          onSave={title => saveEditing(item.id, title)}
+                          onCancel={cancelEditing}
+                        />
                       )}
 
                       <div className="flex flex-wrap gap-2">
