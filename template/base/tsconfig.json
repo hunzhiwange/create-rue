@@ -16,7 +16,7 @@
     "jsxImportSource": "@rue-js",
     "declaration": true,
     "outDir": "./dist",
-    "baseUrl": ".",
+    "baseUrl": "."
   },
   "include": ["app/**/*.ts", "app/**/*.tsx", "app/**/*.d.ts", "vite.config.ts"]
 }

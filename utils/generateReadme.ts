@@ -1,9 +1,6 @@
 import getCommand from './getCommand'
 
-export default function generateReadme({
-  projectName,
-  packageManager,
-}) {
+export default function generateReadme({ projectName, packageManager }) {
   const commandFor = (scriptName: string, args?: string) =>
     getCommand(packageManager, scriptName, args)
 

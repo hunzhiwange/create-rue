@@ -72,7 +72,7 @@ const getStoredTodos = (): TodoItem[] => {
     }
 
     return parsed.filter(
-      item =>
+      (item) =>
         item &&
         typeof item.id === 'number' &&
         typeof item.title === 'string' &&
@@ -121,7 +121,7 @@ const EditingTitleInput: FC<{
   initialTitle: string
   onSave: (title: string) => void
   onCancel: () => void
-}> = props => {
+}> = (props) => {
   const [title, setTitle] = useState(props.initialTitle)
 
   return (
@@ -170,17 +170,17 @@ const TodoApp: FC = () => {
   )
 
   const counts = computed(() => ({
-    total: todos.value.filter(item => !item.archived).length,
-    todo: todos.value.filter(item => !item.archived && item.status === 'todo').length,
-    doing: todos.value.filter(item => !item.archived && item.status === 'doing').length,
-    done: todos.value.filter(item => !item.archived && item.status === 'done').length,
-    archived: todos.value.filter(item => item.archived).length,
+    total: todos.value.filter((item) => !item.archived).length,
+    todo: todos.value.filter((item) => !item.archived && item.status === 'todo').length,
+    doing: todos.value.filter((item) => !item.archived && item.status === 'doing').length,
+    done: todos.value.filter((item) => !item.archived && item.status === 'done').length,
+    archived: todos.value.filter((item) => item.archived).length,
   }))
 
   const visibleTodos = computed(() => {
     const keyword = search.value.trim().toLowerCase()
 
-    return todos.value.filter(item => {
+    return todos.value.filter((item) => {
       const matchesKeyword = !keyword || item.title.toLowerCase().includes(keyword)
       if (!matchesKeyword) {
         return false
@@ -222,20 +222,20 @@ const TodoApp: FC = () => {
   }
 
   const removeTodo = (id: number) => {
-    todos.value = todos.value.filter(item => item.id !== id)
+    todos.value = todos.value.filter((item) => item.id !== id)
     if (editingId.value === id) {
       editingId.value = null
     }
   }
 
   const updateStatus = (id: number, status: TodoStatus) => {
-    todos.value = todos.value.map(item =>
+    todos.value = todos.value.map((item) =>
       item.id === id ? { ...item, status, archived: false } : item,
     )
   }
 
   const toggleArchived = (id: number) => {
-    todos.value = todos.value.map(item =>
+    todos.value = todos.value.map((item) =>
       item.id === id ? { ...item, archived: !item.archived } : item,
     )
   }
@@ -253,7 +253,7 @@ const TodoApp: FC = () => {
       return
     }
 
-    todos.value = todos.value.map(item => (item.id === id ? { ...item, title } : item))
+    todos.value = todos.value.map((item) => (item.id === id ? { ...item, title } : item))
     cancelEditing()
   }
 
@@ -262,7 +262,9 @@ const TodoApp: FC = () => {
       <section className="hero border border-base-300 bg-base-100 shadow-xl">
         <div className="hero-content flex-col items-start gap-8 px-6 py-8 lg:flex-row lg:items-end lg:justify-between">
           <div className="max-w-3xl space-y-4">
-            <h1 className="text-4xl font-semibold tracking-tight sm:text-5xl">Todo App 已作为 base 模板内置页面</h1>
+            <h1 className="text-4xl font-semibold tracking-tight sm:text-5xl">
+              Todo App 已作为 base 模板内置页面
+            </h1>
             <div className="flex flex-wrap gap-3">
               <RouterLink to="/" className="btn btn-outline">
                 返回默认简报
@@ -330,7 +332,7 @@ const TodoApp: FC = () => {
           </div>
 
           <div className="flex flex-wrap gap-2">
-            {filterOptions.map(filter => (
+            {filterOptions.map((filter) => (
               <button
                 key={filter.key}
                 className={`btn btn-sm ${
@@ -366,7 +368,7 @@ const TodoApp: FC = () => {
 
       <section className="grid gap-4">
         {visibleTodos.get().length ? (
-          visibleTodos.get().map(item => {
+          visibleTodos.get().map((item) => {
             const meta = statusMeta[item.status]
             const isEditing = editingId.value === item.id
 
@@ -381,10 +383,16 @@ const TodoApp: FC = () => {
                   <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
                     <div className="flex-1 space-y-3">
                       <div className="flex flex-wrap items-center gap-2">
-                        <span className={`inline-block h-2.5 w-2.5 rounded-full ${meta.dotClass}`}></span>
+                        <span
+                          className={`inline-block h-2.5 w-2.5 rounded-full ${meta.dotClass}`}
+                        ></span>
                         <span className={meta.badgeClass}>{meta.label}</span>
-                        {item.archived && <span className="badge badge-secondary badge-outline">已归档</span>}
-                        <span className="text-xs text-base-content/50">创建于 {item.createdAt}</span>
+                        {item.archived && (
+                          <span className="badge badge-secondary badge-outline">已归档</span>
+                        )}
+                        <span className="text-xs text-base-content/50">
+                          创建于 {item.createdAt}
+                        </span>
                       </div>
 
                       {!isEditing && (
@@ -403,13 +411,13 @@ const TodoApp: FC = () => {
                         <EditingTitleInput
                           key={item.id}
                           initialTitle={item.title}
-                          onSave={title => saveEditing(item.id, title)}
+                          onSave={(title) => saveEditing(item.id, title)}
                           onCancel={cancelEditing}
                         />
                       )}
 
                       <div className="flex flex-wrap gap-2">
-                        {statusOptions.map(option => (
+                        {statusOptions.map((option) => (
                           <button
                             key={option.key}
                             className={`btn btn-xs ${
@@ -427,7 +435,10 @@ const TodoApp: FC = () => {
 
                     <div className="flex flex-wrap gap-2 lg:justify-end">
                       {!isEditing && (
-                        <button className="btn btn-sm btn-outline" onClick={() => startEditing(item)}>
+                        <button
+                          className="btn btn-sm btn-outline"
+                          onClick={() => startEditing(item)}
+                        >
                           改名
                         </button>
                       )}
@@ -437,7 +448,10 @@ const TodoApp: FC = () => {
                       >
                         {item.archived ? '恢复' : '归档'}
                       </button>
-                      <button className="btn btn-sm btn-outline btn-error" onClick={() => removeTodo(item.id)}>
+                      <button
+                        className="btn btn-sm btn-outline btn-error"
+                        onClick={() => removeTodo(item.id)}
+                      >
                         删除
                       </button>
                     </div>

@@ -30,7 +30,7 @@ const totalRevenue = rows.reduce((sum, row) => sum + row.revenue, 0)
 const totalOrders = rows.reduce((sum, row) => sum + row.orders, 0)
 const avgConversion = rows.reduce((sum, row) => sum + row.conversion, 0) / rows.length
 const peakRow = rows.reduce((max, row) => (row.revenue > max.revenue ? row : max), rows[0])
-const maxRevenue = Math.max(...rows.map(row => row.revenue))
+const maxRevenue = Math.max(...rows.map((row) => row.revenue))
 
 const summaryCards = [
   {
@@ -89,7 +89,7 @@ const Report: FC = () => (
     </section>
 
     <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-      {summaryCards.map(card => (
+      {summaryCards.map((card) => (
         <article key={card.label} className={`card shadow-lg ${card.tone}`}>
           <div className="card-body gap-2">
             <p className="text-sm opacity-80">{card.label}</p>
@@ -115,13 +115,17 @@ const Report: FC = () => (
           </div>
 
           <div className="space-y-4">
-            {rows.map(row => (
+            {rows.map((row) => (
               <div key={row.day} className="grid gap-2">
                 <div className="flex items-center justify-between gap-4 text-sm">
                   <div className="font-medium">{row.day}</div>
                   <div className="text-base-content/60">{moneyFormatter.format(row.revenue)}</div>
                 </div>
-                <progress className="progress progress-primary w-full" value={row.revenue} max={maxRevenue}></progress>
+                <progress
+                  className="progress progress-primary w-full"
+                  value={row.revenue}
+                  max={maxRevenue}
+                ></progress>
                 <div className="flex items-center justify-between gap-4 text-xs text-base-content/60">
                   <span>{row.orders} 单</span>
                   <span>转化率 {row.conversion}%</span>
@@ -173,7 +177,7 @@ const Report: FC = () => (
             </tr>
           </thead>
           <tbody>
-            {rows.map(row => (
+            {rows.map((row) => (
               <tr key={row.day}>
                 <td className="font-medium">{row.day}</td>
                 <td>{row.orders}</td>

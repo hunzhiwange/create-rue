@@ -16,8 +16,16 @@
   body {
     @apply bg-base-200 text-base-content antialiased;
     background-image:
-      radial-gradient(circle at top, color-mix(in oklch, var(--color-primary) 14%, transparent), transparent 28%),
-      radial-gradient(circle at bottom right, color-mix(in oklch, var(--color-accent) 10%, transparent), transparent 24%);
+      radial-gradient(
+        circle at top,
+        color-mix(in oklch, var(--color-primary) 14%, transparent),
+        transparent 28%
+      ),
+      radial-gradient(
+        circle at bottom right,
+        color-mix(in oklch, var(--color-accent) 10%, transparent),
+        transparent 24%
+      );
   }
 
   * {

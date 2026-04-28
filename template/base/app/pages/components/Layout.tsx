@@ -111,7 +111,7 @@ const ThemePicker: FC = () => {
         theme.value = (event.currentTarget as HTMLSelectElement).value
       }}
     >
-      {themes.map(name => (
+      {themes.map((name) => (
         <option key={name} value={name} selected={theme.value === name}>
           {themeLabels[name] || name}
         </option>
@@ -138,7 +138,7 @@ const Header: FC = () => {
           </RouterLink>
         </div>
         <nav className="navbar-center hidden flex-1 justify-center gap-2 md:flex">
-          {navItems.map(item => (
+          {navItems.map((item) => (
             <RouterLink
               key={item.to}
               to={item.to}
@@ -171,7 +171,7 @@ const Footer: FC = () => (
   </footer>
 )
 
-const HeaderToggleButton: FC<{ hidden: boolean; onToggle: () => void }> = props => (
+const HeaderToggleButton: FC<{ hidden: boolean; onToggle: () => void }> = (props) => (
   <button
     type="button"
     className="btn btn-circle btn-sm fixed left-3 top-3 z-50 border-base-300 bg-base-100/90 shadow-lg backdrop-blur"
@@ -183,7 +183,7 @@ const HeaderToggleButton: FC<{ hidden: boolean; onToggle: () => void }> = props 
   </button>
 )
 
-const SiteLayout: FC = props => {
+const SiteLayout: FC = (props) => {
   const route = useRoute()
   const reportHeaderHidden = ref(getStoredHeaderHidden())
   const currentPath = computed(() => route.get()?.path || '/')
@@ -209,7 +209,9 @@ const SiteLayout: FC = props => {
             }}
           />
         )}
-        <main className={`content-width pb-10 ${hideHeader.get() ? 'pt-6 sm:pt-8' : 'pt-6 sm:pt-8'}`}>
+        <main
+          className={`content-width pb-10 ${hideHeader.get() ? 'pt-6 sm:pt-8' : 'pt-6 sm:pt-8'}`}
+        >
           {props.children}
         </main>
         <Footer />

@@ -14,24 +14,24 @@
   },
   "dependencies": {
     "@rue-js/jsx-runtime": "^0.0.33",
-    "@rue-js/runtime": "^0.0.33",
     "@rue-js/router": "^0.0.33",
     "@rue-js/rue": "^0.0.33",
+    "@rue-js/runtime": "^0.0.33",
     "@rue-js/runtime-vapor": "^0.0.33",
+    "daisyui": "^5.5.11",
     "oxfmt": "^0.42.0",
-    "oxlint": "^1.57.0",
-    "daisyui": "^5.5.11"
+    "oxlint": "^1.57.0"
   },
   "devDependencies": {
-    "@swc/core": "^1.15.3",
     "@rue-js/jsx-dev-runtime": "^0.0.33",
     "@rue-js/vite-plugin-rue": "^0.0.33",
-    "typescript": "^5.9.3",
-    "vite": "^8.0.3",
+    "@swc/core": "^1.15.3",
     "@tailwindcss/typography": "^0.5.19",
     "@tailwindcss/vite": "^4.1.17",
-    "vite-plugin-wasm": "^3.5.0",
-    "@types/node": "^24.10.1"
+    "@types/node": "^24.10.1",
+    "typescript": "^5.9.3",
+    "vite": "^8.0.3",
+    "vite-plugin-wasm": "^3.5.0"
   },
   "packageManager": "pnpm@10.33.0+sha512.10568bb4a6afb58c9eb3630da90cc9516417abebd3fabbe6739f0ae795728da1491e9db5a544c76ad8eb7570f5c4bb3d6c637b2cb41bfdcdb47fa823c8649319"
 }

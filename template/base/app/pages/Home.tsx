@@ -35,9 +35,12 @@ const Home: FC = () => (
       <div className="hero-content flex-col items-start gap-8 px-6 py-8 lg:flex-row lg:items-end lg:justify-between">
         <div className="max-w-3xl space-y-4">
           <div className="badge badge-primary badge-outline">Rue.js</div>
-          <h1 className="text-4xl font-semibold tracking-tight sm:text-5xl">The Wasm Framework For Vapor Native DOM</h1>
+          <h1 className="text-4xl font-semibold tracking-tight sm:text-5xl">
+            The Wasm Framework For Vapor Native DOM
+          </h1>
           <p className="max-w-2xl text-base leading-7 text-base-content/70">
-            Rue.js 采用原生 JSX / TSX 开发方式，结合细粒度响应式与面向原生 DOM 的渲染模型，适合构建轻量、直接且可维护的前端应用。
+            Rue.js 采用原生 JSX / TSX 开发方式，结合细粒度响应式与面向原生 DOM
+            的渲染模型，适合构建轻量、直接且可维护的前端应用。
           </p>
           <div className="flex flex-wrap gap-3">
             <RouterLink to="/report" className="btn btn-primary">
@@ -63,7 +66,7 @@ const Home: FC = () => (
     </section>
 
     <section className="grid gap-4 md:grid-cols-3">
-      {highlights.map(item => (
+      {highlights.map((item) => (
         <article key={item.title} className="card border border-base-300 bg-base-100 shadow-sm">
           <div className="card-body gap-3">
             <h2 className="text-2xl font-semibold">{item.title}</h2>
@@ -82,7 +85,7 @@ const Home: FC = () => (
           </div>
 
           <div className="mockup-code text-sm">
-            {quickStartCommands.map(command => (
+            {quickStartCommands.map((command) => (
               <pre key={command} data-prefix="$">
                 <code>{command}</code>
               </pre>
@@ -99,7 +102,8 @@ const Home: FC = () => (
           </div>
 
           <div className="rounded-2xl bg-base-200 p-4 text-sm leading-7 text-base-content/70">
-            生成的项目基于 Vite，默认支持 JSX / TSX 组件开发；生产构建使用 npm run build，产物输出到 dist 目录。
+            生成的项目基于 Vite，默认支持 JSX / TSX 组件开发；生产构建使用 npm run build，产物输出到
+            dist 目录。
           </div>
         </div>
       </article>
@@ -112,8 +116,11 @@ const Home: FC = () => (
           </div>
 
           <div className="space-y-3">
-            {nextSteps.map(step => (
-              <div key={step} className="rounded-2xl bg-base-200 p-4 text-sm leading-7 text-base-content/75">
+            {nextSteps.map((step) => (
+              <div
+                key={step}
+                className="rounded-2xl bg-base-200 p-4 text-sm leading-7 text-base-content/75"
+              >
                 {step}
               </div>
             ))}
