@@ -9,20 +9,20 @@ importers:
   .:
     dependencies:
       '@rue-js/jsx-runtime':
-        specifier: ^0.0.30
-        version: 0.0.30(typescript@5.9.3)
+        specifier: ^0.0.33
+        version: 0.0.33(typescript@5.9.3)
       '@rue-js/router':
-        specifier: ^0.0.30
-        version: 0.0.30(typescript@5.9.3)
+        specifier: ^0.0.33
+        version: 0.0.33(typescript@5.9.3)
       '@rue-js/rue':
-        specifier: ^0.0.30
-        version: 0.0.30(typescript@5.9.3)
+        specifier: ^0.0.33
+        version: 0.0.33(typescript@5.9.3)
       '@rue-js/runtime':
-        specifier: ^0.0.30
-        version: 0.0.30(typescript@5.9.3)
+        specifier: ^0.0.33
+        version: 0.0.33(typescript@5.9.3)
       '@rue-js/runtime-vapor':
-        specifier: ^0.0.30
-        version: 0.0.30
+        specifier: ^0.0.33
+        version: 0.0.33
       daisyui:
         specifier: ^5.5.11
         version: 5.5.19
@@ -34,11 +34,11 @@ importers:
         version: 1.57.0
     devDependencies:
       '@rue-js/jsx-dev-runtime':
-        specifier: ^0.0.30
-        version: 0.0.30(typescript@5.9.3)
+        specifier: ^0.0.33
+        version: 0.0.33(typescript@5.9.3)
       '@rue-js/vite-plugin-rue':
-        specifier: ^0.0.30
-        version: 0.0.30(typescript@5.9.3)
+        specifier: ^0.0.33
+        version: 0.0.33(typescript@5.9.3)
       '@swc/core':
         specifier: ^1.15.3
         version: 1.15.21
@@ -439,37 +439,37 @@ packages:
   '@rolldown/pluginutils@1.0.0-rc.12':
     resolution: {integrity: sha512-HHMwmarRKvoFsJorqYlFeFRzXZqCt2ETQlEDOb9aqssrnVBB1/+xgTGtuTrIk5vzLNX1MjMtTf7W9z3tsSbrxw==}
 
-  '@rue-js/jsx-dev-runtime@0.0.30':
-    resolution: {integrity: sha512-GdqrDFa8KnZm2xRg869FVOtiTPh/tzuIi70zGTwJGgAhQ9iCmuGsZy2Rs7Ay2ksXY5GwZ5i190UinCK1rmMU1A==}
+  '@rue-js/jsx-dev-runtime@0.0.33':
+    resolution: {integrity: sha512-GlqCBaa8WDAaegq1p2VxMDp+Leym7Ty+HU9P9ROF3lz1lN9iT5S4f1oCe6/Xcm3+B1eQEiaBNu/2X0QCHrPvUQ==}
 
-  '@rue-js/jsx-runtime@0.0.30':
-    resolution: {integrity: sha512-BFbgC5Rkd7ksRVtWnAuW+jdGwOcELwViYziQB4yMquGh6bZwre5y0wXiSHfNxE0VBRHnim4GtqmXzCz1FpC6rA==}
+  '@rue-js/jsx-runtime@0.0.33':
+    resolution: {integrity: sha512-V0nybkNTwybZZcNGUVBmE+/DwYrHvYhL8Mf1kBm6Qjzr7rprnib7obFKsqZqE7PrJmIYKRbGbzLTEiqg48MkRw==}
 
-  '@rue-js/router@0.0.30':
-    resolution: {integrity: sha512-P//uoQb1KA/FH1yWsCVxf2sJ/fSJuIx9X+awvTneRRiAvqk5f6bwDiITIcUqdv1zah1/oSdqFr/6HkBpC5N/EA==}
+  '@rue-js/router@0.0.33':
+    resolution: {integrity: sha512-fgyggZxjcXpkFReAVT2obWP2TP4dqbbzzttvzBEkUEt7QtnvicI4DZh0TX/g1muN4odtzxl+q0qrnBT8uROC6w==}
 
-  '@rue-js/rue@0.0.30':
-    resolution: {integrity: sha512-4My32Iq3NGASiroKdLvskx46MiOx1ofbnyCTtBqUJ331G/Fosq2CxMPF6K0RfPV6VDAiCM0OhBBLgyHPhBDBEA==}
+  '@rue-js/rue@0.0.33':
+    resolution: {integrity: sha512-jfCjuBZI4axs287OiIiHDRh105uQstpVQYzzLcmw5XiJGlVzqdTq6wM4CBRxMxNGgnNPBwJvoPpVQ+8aqSanwg==}
     peerDependencies:
       typescript: '*'
     peerDependenciesMeta:
       typescript:
         optional: true
 
-  '@rue-js/runtime-vapor@0.0.30':
-    resolution: {integrity: sha512-4IyNTaRRdq5VdWF7dIGaiGUyHGat+ByJdyZUOVSYuBpQUbiNn7uXCZB6GJ6/eu8N4vw0uqbChzb3VI6Avi71ZA==}
+  '@rue-js/runtime-vapor@0.0.33':
+    resolution: {integrity: sha512-Jl83+FGh7XRbCM2DZsZOxDX1W5Tyxvxh/0K/Ex0pvnC/9pABVM17p6jtgzOkoVxuenPxXalnn8fzhipjsFWq8Q==}
 
-  '@rue-js/runtime@0.0.30':
-    resolution: {integrity: sha512-iGlbhmrKFxBdPxF+J5XAprLHE6rqwJqNo5dEhhGlrpKB7rsqEl7F/kRzo7tjtRIXArjrIISlnlTqO+kZjpwMVQ==}
+  '@rue-js/runtime@0.0.33':
+    resolution: {integrity: sha512-agL3S4f3xNL7fagLG5AcrM5dlC4WmEAFUl7AYkFlGrIuvA9GrSp9enKHoikaOCUG3ph6OQNY0YbRJ9/wYWzBwQ==}
 
-  '@rue-js/shared@0.0.30':
-    resolution: {integrity: sha512-FVKcUNOIvtkN6CuHvi6478ZXXbJFHwU7LakNERKtKS70mfTAek2HZy2NfMMmeATGOGZmSdJJA8Agjvn7AwzElQ==}
+  '@rue-js/shared@0.0.33':
+    resolution: {integrity: sha512-7R3Beg6NTiZ4bPRQHivdb81GzHf3wDNJUjEtyZHtkABELS1ap/yV8tdAiKL8Hfplsok+SNYpiaaAmp2xKoihYA==}
 
-  '@rue-js/swc-plugin-rue@0.0.30':
-    resolution: {integrity: sha512-jIR6KcdAiF6abKwn4q8/wLpDGw5t+9MgeACKOxTUuYTSOnSVKQtCafTxupaEolp84QEN+0rTC/1Jg1gfOQ/DEQ==}
+  '@rue-js/swc-plugin-rue@0.0.33':
+    resolution: {integrity: sha512-Xw+jokLM4dDP0Sq6+dBPG9LURcZUHzTf/gN/Bk33uy3mR0mxWmiEAMyB5hqDHQY0G0DdzvvuzaQQWWTX5LMpjg==}
 
-  '@rue-js/vite-plugin-rue@0.0.30':
-    resolution: {integrity: sha512-BubpAcj/HVEyfoLTAkKBRZa/tz8cg/BHhWTcqZ2ZfOi8GPV1esaV+7P4qL7S4SuEhYkSHxV9C42huv9d4WDLKA==}
+  '@rue-js/vite-plugin-rue@0.0.33':
+    resolution: {integrity: sha512-jONy9UFT4sw9xqYE9JsUNKbJQBGUsge40obnOiQQEo2apo+mqVu7KFu0x2k65E4s/uXpgCrOuPNmFNp657WxIQ==}
 
   '@swc/core-darwin-arm64@1.15.21':
     resolution: {integrity: sha512-SA8SFg9dp0qKRH8goWsax6bptFE2EdmPf2YRAQW9WoHGf3XKM1bX0nd5UdwxmC5hXsBUZAYf7xSciCler6/oyA==}
@@ -1119,50 +1119,50 @@ snapshots:
 
   '@rolldown/pluginutils@1.0.0-rc.12': {}
 
-  '@rue-js/jsx-dev-runtime@0.0.30(typescript@5.9.3)':
+  '@rue-js/jsx-dev-runtime@0.0.33(typescript@5.9.3)':
     dependencies:
-      '@rue-js/rue': 0.0.30(typescript@5.9.3)
+      '@rue-js/rue': 0.0.33(typescript@5.9.3)
     transitivePeerDependencies:
       - typescript
 
-  '@rue-js/jsx-runtime@0.0.30(typescript@5.9.3)':
+  '@rue-js/jsx-runtime@0.0.33(typescript@5.9.3)':
     dependencies:
-      '@rue-js/rue': 0.0.30(typescript@5.9.3)
+      '@rue-js/rue': 0.0.33(typescript@5.9.3)
     transitivePeerDependencies:
       - typescript
 
-  '@rue-js/router@0.0.30(typescript@5.9.3)':
+  '@rue-js/router@0.0.33(typescript@5.9.3)':
     dependencies:
-      '@rue-js/rue': 0.0.30(typescript@5.9.3)
+      '@rue-js/rue': 0.0.33(typescript@5.9.3)
     transitivePeerDependencies:
       - typescript
 
-  '@rue-js/rue@0.0.30(typescript@5.9.3)':
+  '@rue-js/rue@0.0.33(typescript@5.9.3)':
     dependencies:
-      '@rue-js/runtime': 0.0.30(typescript@5.9.3)
-      '@rue-js/shared': 0.0.30
+      '@rue-js/runtime': 0.0.33(typescript@5.9.3)
+      '@rue-js/shared': 0.0.33
     optionalDependencies:
       typescript: 5.9.3
 
-  '@rue-js/runtime-vapor@0.0.30': {}
+  '@rue-js/runtime-vapor@0.0.33': {}
 
-  '@rue-js/runtime@0.0.30(typescript@5.9.3)':
+  '@rue-js/runtime@0.0.33(typescript@5.9.3)':
     dependencies:
-      '@rue-js/rue': 0.0.30(typescript@5.9.3)
-      '@rue-js/runtime-vapor': 0.0.30
-      '@rue-js/shared': 0.0.30
+      '@rue-js/rue': 0.0.33(typescript@5.9.3)
+      '@rue-js/runtime-vapor': 0.0.33
+      '@rue-js/shared': 0.0.33
       csstype: 3.2.3
     transitivePeerDependencies:
       - typescript
 
-  '@rue-js/shared@0.0.30': {}
+  '@rue-js/shared@0.0.33': {}
 
-  '@rue-js/swc-plugin-rue@0.0.30': {}
+  '@rue-js/swc-plugin-rue@0.0.33': {}
 
-  '@rue-js/vite-plugin-rue@0.0.30(typescript@5.9.3)':
+  '@rue-js/vite-plugin-rue@0.0.33(typescript@5.9.3)':
     dependencies:
-      '@rue-js/rue': 0.0.30(typescript@5.9.3)
-      '@rue-js/swc-plugin-rue': 0.0.30
+      '@rue-js/rue': 0.0.33(typescript@5.9.3)
+      '@rue-js/swc-plugin-rue': 0.0.33
     transitivePeerDependencies:
       - typescript
 
