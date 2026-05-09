@@ -2,7 +2,7 @@ import { computed, type FC, ref, useEffect, watch } from '@rue-js/rue'
 import { RouterLink, useRoute } from '@rue-js/router'
 
 const themeStorageKey = 'rue.base.theme'
-const reportHeaderStorageKey = 'rue.base.report.hideHeader'
+const headerToggleRoutes = ['/', '/report', '/todo']
 
 const navItems = [
   { to: '/', label: '首页' },
@@ -85,7 +85,15 @@ const getStoredTheme = () => {
   return storedTheme && themes.includes(storedTheme) ? storedTheme : 'light'
 }
 
-const getStoredHeaderHidden = () => localStorage.getItem(reportHeaderStorageKey) === '1'
+const getHeaderStorageKey = (path: string) => {
+  if (path === '/') {
+    return 'rue.base.header.hide.home'
+  }
+
+  return `rue.base.header.hide.${path.replace(/^\//, '')}`
+}
+
+const getStoredHeaderHidden = (path: string) => localStorage.getItem(getHeaderStorageKey(path)) === '1'
 
 const applyTheme = (theme: string) => {
   document.documentElement.setAttribute('data-theme', theme)
@@ -229,26 +237,69 @@ const Footer: FC = () => (
 const HeaderToggleButton: FC<{ hidden: boolean; onToggle: () => void }> = (props) => (
   <button
     type="button"
-    className="btn btn-circle btn-sm fixed left-3 top-3 z-50 border-base-300 bg-base-100/90 shadow-lg backdrop-blur"
+    className="btn btn-circle btn-sm fixed left-3 top-3 z-50 border-base-300 bg-base-100/95 text-base-content shadow-lg backdrop-blur"
     aria-label={props.hidden ? '显示头部和底部' : '隐藏头部和底部'}
     title={props.hidden ? '显示头部和底部' : '隐藏头部和底部'}
     onClick={props.onToggle}
   >
-    {props.hidden ? '显' : '隐'}
+    {props.hidden ? (
+      <svg
+        viewBox="0 0 24 24"
+        width="16"
+        height="16"
+        aria-hidden="true"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z" />
+        <circle cx="12" cy="12" r="3" />
+      </svg>
+    ) : (
+      <svg
+        viewBox="0 0 24 24"
+        width="16"
+        height="16"
+        aria-hidden="true"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path d="M3 3l18 18" />
+        <path d="M10.6 10.7a3 3 0 0 0 4.2 4.2" />
+        <path d="M9.9 5.1A10.9 10.9 0 0 1 12 5c6.5 0 10 7 10 7a21.7 21.7 0 0 1-4 5.2" />
+        <path d="M6.6 6.7C4.2 8.3 2.7 10.9 2 12c0 0 3.5 7 10 7 1.8 0 3.4-.5 4.8-1.3" />
+      </svg>
+    )}
   </button>
 )
 
 const SiteLayout: FC = (props) => {
   const route = useRoute()
   const currentPath = computed(() => route.get()?.path || '/')
-  const allowHeaderToggle = computed(() => currentPath.get() === '/report')
-  const reportHeaderHidden = ref(getStoredHeaderHidden())
+  const allowHeaderToggle = computed(() => headerToggleRoutes.includes(currentPath.get()))
+  const reportHeaderHidden = ref(getStoredHeaderHidden(currentPath.get()))
   const hideHeader = computed(() => allowHeaderToggle.get() && reportHeaderHidden.value)
+
+  watch(
+    () => currentPath.get(),
+    (path) => {
+      reportHeaderHidden.value = allowHeaderToggle.get() ? getStoredHeaderHidden(path) : false
+    },
+  )
 
   watch(
     () => reportHeaderHidden.value,
     () => {
-      localStorage.setItem(reportHeaderStorageKey, reportHeaderHidden.value ? '1' : '0')
+      if (!allowHeaderToggle.get()) {
+        return
+      }
+
+      localStorage.setItem(getHeaderStorageKey(currentPath.get()), reportHeaderHidden.value ? '1' : '0')
     },
   )
 
