@@ -239,8 +239,11 @@ const HeaderToggleButton: FC<{ hidden: boolean; onToggle: () => void }> = (props
 )
 
 const SiteLayout: FC = (props) => {
+  const route = useRoute()
+  const currentPath = computed(() => route.get()?.path || '/')
+  const allowHeaderToggle = computed(() => currentPath.get() === '/report')
   const reportHeaderHidden = ref(getStoredHeaderHidden())
-  const hideHeader = computed(() => reportHeaderHidden.value)
+  const hideHeader = computed(() => allowHeaderToggle.get() && reportHeaderHidden.value)
 
   watch(
     () => reportHeaderHidden.value,
@@ -253,12 +256,14 @@ const SiteLayout: FC = (props) => {
     <div className="app-shell">
       <div className="app-surface">
         {!hideHeader.get() && <Header />}
-        <HeaderToggleButton
-          hidden={hideHeader.get()}
-          onToggle={() => {
-            reportHeaderHidden.value = !reportHeaderHidden.value
-          }}
-        />
+        {allowHeaderToggle.get() && (
+          <HeaderToggleButton
+            hidden={hideHeader.get()}
+            onToggle={() => {
+              reportHeaderHidden.value = !reportHeaderHidden.value
+            }}
+          />
+        )}
         <main className="content-width pb-10 pt-6 sm:pt-8">
           {props.children}
         </main>
