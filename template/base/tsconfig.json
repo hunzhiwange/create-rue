@@ -15,8 +15,7 @@
     "jsx": "react-jsx",
     "jsxImportSource": "@rue-js",
     "declaration": true,
-    "outDir": "./dist",
-    "baseUrl": "."
+    "outDir": "./dist"
   },
   "include": ["app/**/*.ts", "app/**/*.tsx", "app/**/*.d.ts", "vite.config.ts"]
 }
