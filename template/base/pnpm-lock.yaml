@@ -9,19 +9,19 @@ importers:
   .:
     dependencies:
       '@rue-js/jsx-runtime':
-        specifier: ^0.0.39
+        specifier: ^0.1.0
         version: 0.0.39(typescript@6.0.3)
       '@rue-js/router':
-        specifier: ^0.0.39
+        specifier: ^0.1.0
         version: 0.0.39(typescript@6.0.3)
       '@rue-js/rue':
-        specifier: ^0.0.39
+        specifier: ^0.1.0
         version: 0.0.39(typescript@6.0.3)
       '@rue-js/runtime':
-        specifier: ^0.0.39
+        specifier: ^0.1.0
         version: 0.0.39(typescript@6.0.3)
       '@rue-js/runtime-vapor':
-        specifier: ^0.0.39
+        specifier: ^0.1.0
         version: 0.0.39
       daisyui:
         specifier: ^5.5.19
@@ -34,10 +34,10 @@ importers:
         version: 1.63.0
     devDependencies:
       '@rue-js/jsx-dev-runtime':
-        specifier: ^0.0.39
+        specifier: ^0.1.0
         version: 0.0.39(typescript@6.0.3)
       '@rue-js/vite-plugin-rue':
-        specifier: ^0.0.39
+        specifier: ^0.1.0
         version: 0.0.39(typescript@6.0.3)
       '@swc/core':
         specifier: ^1.15.33
