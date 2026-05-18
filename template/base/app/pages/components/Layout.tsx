@@ -93,7 +93,8 @@ const getHeaderStorageKey = (path: string) => {
   return `rue.base.header.hide.${path.replace(/^\//, '')}`
 }
 
-const getStoredHeaderHidden = (path: string) => localStorage.getItem(getHeaderStorageKey(path)) === '1'
+const getStoredHeaderHidden = (path: string) =>
+  localStorage.getItem(getHeaderStorageKey(path)) === '1'
 
 const applyTheme = (theme: string) => {
   document.documentElement.setAttribute('data-theme', theme)
@@ -299,7 +300,10 @@ const SiteLayout: FC = (props) => {
         return
       }
 
-      localStorage.setItem(getHeaderStorageKey(currentPath.get()), reportHeaderHidden.value ? '1' : '0')
+      localStorage.setItem(
+        getHeaderStorageKey(currentPath.get()),
+        reportHeaderHidden.value ? '1' : '0',
+      )
     },
   )
 
@@ -315,9 +319,7 @@ const SiteLayout: FC = (props) => {
             }}
           />
         )}
-        <main className="content-width pb-10 pt-6 sm:pt-8">
-          {props.children}
-        </main>
+        <main className="content-width pb-10 pt-6 sm:pt-8">{props.children}</main>
         {!hideHeader.get() && <Footer />}
       </div>
     </div>
