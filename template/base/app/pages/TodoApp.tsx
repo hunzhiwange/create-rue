@@ -1,4 +1,4 @@
-import { computed, type FC, ref, watchEffect } from '@rue-js/rue'
+import { computed, type FC, ref, useState, watchEffect } from '@rue-js/rue'
 import { RouterLink } from '@rue-js/router'
 
 const todoStorageKey = 'rue.base.todos'
@@ -211,18 +211,6 @@ const getTodoCreatedAtTime = (item: TodoItem) => {
   return parsed.getTime()
 }
 
-const getClosestTodoActionElement = (target: EventTarget | null) => {
-  if (target instanceof Element) {
-    return target.closest<HTMLElement>('[data-todo-action]')
-  }
-
-  if (target instanceof Node) {
-    return target.parentElement?.closest<HTMLElement>('[data-todo-action]') ?? null
-  }
-
-  return null
-}
-
 const getTodoStorage = () => {
   if (typeof globalThis === 'undefined' || !('localStorage' in globalThis)) {
     return null
@@ -364,47 +352,41 @@ const statusMeta: Record<
 const TodoApp: FC = () => {
   const persistedState = loadPersistedTodoState()
   const initialStateTodos = persistedState?.todos ?? initialTodos
-  const todos = ref<TodoItem[]>(initialStateTodos)
-  const draft = ref('')
-  const search = ref(persistedState?.search ?? '')
-  const activeFilter = ref<TodoFilter>(persistedState?.activeFilter ?? 'all')
-  const editingId = ref<number | null>(null)
-  const editingTitle = ref('')
+  const initialActiveFilter: TodoFilter = persistedState?.activeFilter ?? 'all'
+  const [todos, setTodos] = useState<TodoItem[]>(initialStateTodos)
+  const [draft, setDraft] = useState('')
+  const [search, setSearch] = useState(persistedState?.search ?? '')
+  const activeFilter = ref<TodoFilter>(initialActiveFilter)
+  const setActiveFilter = (nextFilter: TodoFilter) => {
+    activeFilter.value = nextFilter
+  }
+  const [editingId, setEditingId] = useState<number | null>(null)
+  const [editingTitle, setEditingTitle] = useState('')
   const nextId = ref(getNextTodoId(initialStateTodos))
   const nextCreatedOrder = ref(getNextCreatedOrder(initialStateTodos))
-  const todosVersion = ref(0)
-
-  const syncTodos = (nextTodos: TodoItem[]) => {
-    todos.value = nextTodos
-    todosVersion.value += 1
-  }
 
   watchEffect(() => {
-    void todosVersion.value
     persistTodoState({
-      todos: todos.value,
+      todos,
       search: search.value,
       activeFilter: activeFilter.value,
     })
   })
 
   const counts = computed(() => {
-    void todosVersion.value
-
     return {
-      total: todos.value.filter((item) => !item.archived).length,
-      todo: todos.value.filter((item) => !item.archived && item.status === 'todo').length,
-      doing: todos.value.filter((item) => !item.archived && item.status === 'doing').length,
-      done: todos.value.filter((item) => !item.archived && item.status === 'done').length,
-      archived: todos.value.filter((item) => item.archived).length,
+      total: todos.filter((item) => !item.archived).length,
+      todo: todos.filter((item) => !item.archived && item.status === 'todo').length,
+      doing: todos.filter((item) => !item.archived && item.status === 'doing').length,
+      done: todos.filter((item) => !item.archived && item.status === 'done').length,
+      archived: todos.filter((item) => item.archived).length,
     }
   })
 
   const visibleTodos = computed(() => {
-    void todosVersion.value
     const keyword = search.value.trim().toLowerCase()
 
-    return todos.value
+    return todos
       .filter((item) => {
         const matchesKeyword = !keyword || item.title.toLowerCase().includes(keyword)
         if (!matchesKeyword) {
@@ -435,161 +417,63 @@ const TodoApp: FC = () => {
       })
   })
 
-  const visibleTodoCards = computed(() => {
-    const currentEditingId = editingId.value
-
-    return visibleTodos.get().map((item) => ({
-      item,
-      meta: statusMeta[item.status],
-      isEditing: currentEditingId === item.id,
-    }))
-  })
-
   const addTodo = () => {
     const title = draft.value.trim()
     if (!title) {
       return
     }
 
-    syncTodos([
-      {
+    const nextTodo: TodoItem = {
         id: nextId.value++,
         title,
         status: 'todo',
         archived: false,
         createdAt: new Date().toISOString(),
         createdOrder: nextCreatedOrder.value++,
-      },
-      ...todos.value,
-    ])
-    draft.value = ''
+      }
+
+    setTodos((current) => [nextTodo, ...current])
+    setDraft('')
   }
 
   const removeTodo = (id: number) => {
-    syncTodos(todos.value.filter((item) => item.id !== id))
+    setTodos((current) => current.filter((item) => item.id !== id))
     if (editingId.value === id) {
-      cancelEditing()
+      setEditingId(null)
+      setEditingTitle('')
     }
   }
 
   const updateStatus = (id: number, status: TodoStatus) => {
-    syncTodos(
-      todos.value.map((item) => (item.id === id ? { ...item, status, archived: false } : item)),
+    setTodos((current) =>
+      current.map((item) => (item.id === id ? { ...item, status, archived: false } : item)),
     )
   }
 
   const toggleArchived = (id: number) => {
-    syncTodos(
-      todos.value.map((item) => (item.id === id ? { ...item, archived: !item.archived } : item)),
+    setTodos((current) =>
+      current.map((item) => (item.id === id ? { ...item, archived: !item.archived } : item)),
     )
   }
 
   const startEditing = (item: TodoItem) => {
-    editingId.value = item.id
-    editingTitle.value = item.title
+    setEditingId(item.id)
+    setEditingTitle(item.title)
   }
 
   const cancelEditing = () => {
-    editingId.value = null
-    editingTitle.value = ''
+    setEditingId(null)
+    setEditingTitle('')
   }
 
-  const saveEditing = (id: number) => {
-    const title = editingTitle.value.trim()
+  const saveEditing = (id: number, titleOverride?: string) => {
+    const title = (titleOverride ?? editingTitle.value).trim()
     if (!title) {
       return
     }
 
-    syncTodos(todos.value.map((item) => (item.id === id ? { ...item, title } : item)))
+    setTodos((current) => current.map((item) => (item.id === id ? { ...item, title } : item)))
     cancelEditing()
-  }
-
-  const handleTodoListClick = (event: MouseEvent) => {
-    const actionElement = getClosestTodoActionElement(event.target)
-
-    if (!actionElement) {
-      return
-    }
-
-    const action = actionElement.dataset.todoAction
-    const id = Number(actionElement.dataset.todoId)
-
-    if (!Number.isFinite(id)) {
-      return
-    }
-
-    if (action === 'status') {
-      const status = actionElement.dataset.todoStatus
-      if (isTodoStatus(status)) {
-        updateStatus(id, status)
-      }
-      return
-    }
-
-    if (action === 'start-editing') {
-      const item = todos.value.find((candidate) => candidate.id === id)
-      if (item) {
-        startEditing(item)
-      }
-      return
-    }
-
-    if (action === 'save-editing') {
-      saveEditing(id)
-      return
-    }
-
-    if (action === 'cancel-editing') {
-      cancelEditing()
-      return
-    }
-
-    if (action === 'toggle-archived') {
-      toggleArchived(id)
-      return
-    }
-
-    if (action === 'remove') {
-      removeTodo(id)
-    }
-  }
-
-  const handleTodoListInput = (event: Event) => {
-    if (!(event.target instanceof HTMLInputElement)) {
-      return
-    }
-
-    const target = event.target
-    if (!target.matches('[data-todo-edit-input]')) {
-      return
-    }
-
-    editingTitle.value = target.value
-  }
-
-  const handleTodoListKeydown = (event: KeyboardEvent) => {
-    if (!(event.target instanceof HTMLInputElement)) {
-      return
-    }
-
-    const target = event.target
-    if (!target.matches('[data-todo-edit-input]')) {
-      return
-    }
-
-    const id = Number(target.dataset.todoId)
-    if (!Number.isFinite(id)) {
-      return
-    }
-
-    if (event.key === 'Enter' && !event.isComposing) {
-      event.preventDefault()
-      saveEditing(id)
-    }
-
-    if (event.key === 'Escape') {
-      cancelEditing()
-    }
   }
 
   return (
@@ -637,7 +521,7 @@ const TodoApp: FC = () => {
                   value={draft.value}
                   placeholder="例如：把日报页接入真实 API"
                   onInput={(event: any) => {
-                    draft.value = (event.target as HTMLInputElement).value
+                    setDraft((event.target as HTMLInputElement).value)
                   }}
                   onKeydown={(event: KeyboardEvent) => {
                     if (event.key === 'Enter' && !event.isComposing) {
@@ -661,7 +545,7 @@ const TodoApp: FC = () => {
                 value={search.value}
                 placeholder="按标题筛选任务"
                 onInput={(event: any) => {
-                  search.value = (event.target as HTMLInputElement).value
+                  setSearch((event.target as HTMLInputElement).value)
                 }}
               />
             </label>
@@ -677,7 +561,7 @@ const TodoApp: FC = () => {
                     : 'btn-ghost border border-base-300'
                 }`}
                 onClick={() => {
-                  activeFilter.value = filter.key
+                  setActiveFilter(filter.key)
                 }}
               >
                 {filter.label}
@@ -702,130 +586,135 @@ const TodoApp: FC = () => {
         </div>
       </section>
 
-      <section
-        className="grid gap-4"
-        onClick={handleTodoListClick}
-        onInput={handleTodoListInput}
-        onKeydown={handleTodoListKeydown}
-      >
-        {visibleTodoCards.get().map((card) => (
-          <article
-            key={card.item.id}
-            className={`card border bg-base-100 shadow-sm transition-all ${card.meta.cardClass} ${
-              card.item.archived ? 'opacity-75' : 'hover:-translate-y-0.5 hover:shadow-md'
-            }`}
-          >
-            <div className="card-body gap-4">
-              <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-                <div className="flex-1 space-y-3">
-                  <div className="flex flex-wrap items-center gap-2">
-                    <span
-                      className={`inline-block h-2.5 w-2.5 rounded-full ${card.meta.dotClass}`}
-                    ></span>
-                    <span className={card.meta.badgeClass}>{card.meta.label}</span>
-                    {card.item.archived && (
-                      <span className="badge badge-secondary badge-outline">已归档</span>
-                    )}
-                    <span className="text-xs text-base-content/50">
-                      创建于 {formatTodoCreatedAt(card.item.createdAt)}
-                    </span>
-                  </div>
+      <section className="grid gap-4">
+        {visibleTodos.get().map((item) => {
+          const isEditing = editingId.value === item.id
+          const editingValue = isEditing ? editingTitle.value : item.title
+          const meta = statusMeta[item.status]
 
-                  {!card.isEditing && (
+          const commitEditing = (latestValue: string) => {
+            setEditingTitle(latestValue)
+            saveEditing(item.id, latestValue)
+          }
+
+          return (
+            <article
+              key={`${item.id}-${item.title}-${item.status}-${item.archived ? 'archived' : 'active'}-${isEditing ? 'editing' : 'view'}`}
+              className={`card border bg-base-100 shadow-sm transition-all ${meta.cardClass} ${
+                item.archived ? 'opacity-75' : 'hover:-translate-y-0.5 hover:shadow-md'
+              }`}
+            >
+              <div className="card-body gap-4">
+                <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+                  <div className="flex-1 space-y-3">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className={`inline-block h-2.5 w-2.5 rounded-full ${meta.dotClass}`}></span>
+                      <span className={meta.badgeClass}>{meta.label}</span>
+                      {item.archived && (
+                        <span className="badge badge-secondary badge-outline">已归档</span>
+                      )}
+                      <span className="text-xs text-base-content/50">
+                        创建于 {formatTodoCreatedAt(item.createdAt)}
+                      </span>
+                    </div>
+
                     <h2
                       className={`text-xl font-semibold ${
-                        card.item.status === 'done'
-                          ? 'text-base-content/50 line-through'
-                          : 'text-base-content'
+                        isEditing
+                          ? 'hidden'
+                          : item.status === 'done'
+                            ? 'text-base-content/50 line-through'
+                            : 'text-base-content'
                       }`}
                     >
-                      {card.item.title}
+                      {item.title}
                     </h2>
-                  )}
 
-                  {card.isEditing && (
-                    <div className="flex flex-col gap-3 sm:flex-row">
+                    <div
+                      data-todo-edit-row="true"
+                      className={`flex flex-col gap-3 sm:flex-row ${isEditing ? '' : 'hidden'}`}
+                    >
                       <input
                         className="input input-bordered w-full"
-                        data-todo-edit-input="true"
-                        data-todo-id={String(card.item.id)}
-                        value={editingTitle.value}
+                        value={editingValue}
+                        onInput={(event: any) => {
+                          setEditingTitle((event.target as HTMLInputElement).value)
+                        }}
+                        onKeydown={(event: KeyboardEvent) => {
+                          if (event.key === 'Enter') {
+                            commitEditing((event.target as HTMLInputElement).value)
+                          }
+                          if (event.key === 'Escape') {
+                            cancelEditing()
+                          }
+                        }}
                       />
                       <div className="flex gap-2">
                         <button
                           className="btn btn-primary btn-sm"
-                          data-todo-action="save-editing"
-                          data-todo-id={String(card.item.id)}
+                          onClick={(event: any) => {
+                            const editRow = (event.currentTarget as HTMLElement).closest(
+                              '[data-todo-edit-row="true"]',
+                            ) as HTMLElement | null
+                            const input = editRow?.querySelector('input') as HTMLInputElement | null
+                            commitEditing(input?.value ?? editingValue)
+                          }}
                           type="button"
                         >
                           保存
                         </button>
-                        <button
-                          className="btn btn-ghost btn-sm"
-                          data-todo-action="cancel-editing"
-                          data-todo-id={String(card.item.id)}
-                          type="button"
-                        >
+                        <button className="btn btn-ghost btn-sm" onClick={cancelEditing} type="button">
                           取消
                         </button>
                       </div>
                     </div>
-                  )}
 
-                  <div className="flex flex-wrap gap-2">
-                    {statusOptions.map((option) => (
-                      <button
-                        key={option.key}
-                        className={`btn btn-xs ${
-                          card.item.status === option.key
-                            ? 'btn-neutral'
-                            : 'btn-ghost border border-base-300'
-                        }`}
-                        data-todo-action="status"
-                        data-todo-id={String(card.item.id)}
-                        data-todo-status={option.key}
-                        type="button"
-                      >
-                        {option.actionLabel}
-                      </button>
-                    ))}
+                    <div className="flex flex-wrap gap-2">
+                      {statusOptions.map((option) => (
+                        <button
+                          key={option.key}
+                          className={`btn btn-xs ${
+                            item.status === option.key
+                              ? 'btn-neutral'
+                              : 'btn-ghost border border-base-300'
+                          }`}
+                          onClick={() => updateStatus(item.id, option.key)}
+                          type="button"
+                        >
+                          {option.actionLabel}
+                        </button>
+                      ))}
+                    </div>
                   </div>
-                </div>
 
-                <div className="flex flex-wrap gap-2 lg:justify-end">
-                  {!card.isEditing && (
+                  <div className="flex flex-wrap gap-2 lg:justify-end">
+                    {!isEditing && (
+                      <button className="btn btn-sm btn-outline" onClick={() => startEditing(item)} type="button">
+                        改名
+                      </button>
+                    )}
                     <button
-                      className="btn btn-sm btn-outline"
-                      data-todo-action="start-editing"
-                      data-todo-id={String(card.item.id)}
+                      className="btn btn-sm btn-outline btn-secondary"
+                      onClick={() => toggleArchived(item.id)}
                       type="button"
                     >
-                      改名
+                      {item.archived ? '恢复' : '归档'}
                     </button>
-                  )}
-                  <button
-                    className="btn btn-sm btn-outline btn-secondary"
-                    data-todo-action="toggle-archived"
-                    data-todo-id={String(card.item.id)}
-                    type="button"
-                  >
-                    {card.item.archived ? '恢复' : '归档'}
-                  </button>
-                  <button
-                    className="btn btn-sm btn-outline btn-error"
-                    data-todo-action="remove"
-                    data-todo-id={String(card.item.id)}
-                    type="button"
-                  >
-                    删除
-                  </button>
+                    <button
+                      className="btn btn-sm btn-outline btn-error"
+                      onClick={() => removeTodo(item.id)}
+                      type="button"
+                    >
+                      删除
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-          </article>
-        ))}
+            </article>
+          )
+        })}
 
-        {!visibleTodoCards.get().length && (
+        {!visibleTodos.get().length && (
           <div className="card border border-dashed border-base-300 bg-base-100 shadow-sm">
             <div className="card-body items-center py-14 text-center">
               <h2 className="text-xl font-semibold">当前筛选下没有任务</h2>
