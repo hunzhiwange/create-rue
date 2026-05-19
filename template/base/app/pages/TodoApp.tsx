@@ -424,13 +424,13 @@ const TodoApp: FC = () => {
     }
 
     const nextTodo: TodoItem = {
-        id: nextId.value++,
-        title,
-        status: 'todo',
-        archived: false,
-        createdAt: new Date().toISOString(),
-        createdOrder: nextCreatedOrder.value++,
-      }
+      id: nextId.value++,
+      title,
+      status: 'todo',
+      archived: false,
+      createdAt: new Date().toISOString(),
+      createdOrder: nextCreatedOrder.value++,
+    }
 
     setTodos((current) => [nextTodo, ...current])
     setDraft('')
@@ -608,7 +608,9 @@ const TodoApp: FC = () => {
                 <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
                   <div className="flex-1 space-y-3">
                     <div className="flex flex-wrap items-center gap-2">
-                      <span className={`inline-block h-2.5 w-2.5 rounded-full ${meta.dotClass}`}></span>
+                      <span
+                        className={`inline-block h-2.5 w-2.5 rounded-full ${meta.dotClass}`}
+                      ></span>
                       <span className={meta.badgeClass}>{meta.label}</span>
                       {item.archived && (
                         <span className="badge badge-secondary badge-outline">已归档</span>
@@ -663,7 +665,11 @@ const TodoApp: FC = () => {
                         >
                           保存
                         </button>
-                        <button className="btn btn-ghost btn-sm" onClick={cancelEditing} type="button">
+                        <button
+                          className="btn btn-ghost btn-sm"
+                          onClick={cancelEditing}
+                          type="button"
+                        >
                           取消
                         </button>
                       </div>
@@ -689,7 +695,11 @@ const TodoApp: FC = () => {
 
                   <div className="flex flex-wrap gap-2 lg:justify-end">
                     {!isEditing && (
-                      <button className="btn btn-sm btn-outline" onClick={() => startEditing(item)} type="button">
+                      <button
+                        className="btn btn-sm btn-outline"
+                        onClick={() => startEditing(item)}
+                        type="button"
+                      >
                         改名
                       </button>
                     )}
