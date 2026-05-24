@@ -466,8 +466,8 @@ const TodoApp: FC = () => {
     setEditingTitle('')
   }
 
-  const saveEditing = (id: number, titleOverride?: string) => {
-    const title = (titleOverride ?? editingTitle.value).trim()
+  const saveEditing = (id: number) => {
+    const title = editingTitle.value.trim()
     if (!title) {
       return
     }
@@ -592,14 +592,9 @@ const TodoApp: FC = () => {
           const editingValue = isEditing ? editingTitle.value : item.title
           const meta = statusMeta[item.status]
 
-          const commitEditing = (latestValue: string) => {
-            setEditingTitle(latestValue)
-            saveEditing(item.id, latestValue)
-          }
-
           return (
             <article
-              key={`${item.id}-${item.title}-${item.status}-${item.archived ? 'archived' : 'active'}-${isEditing ? 'editing' : 'view'}`}
+              key={item.id}
               className={`card border bg-base-100 shadow-sm transition-all ${meta.cardClass} ${
                 item.archived ? 'opacity-75' : 'hover:-translate-y-0.5 hover:shadow-md'
               }`}
@@ -632,10 +627,7 @@ const TodoApp: FC = () => {
                       {item.title}
                     </h2>
 
-                    <div
-                      data-todo-edit-row="true"
-                      className={`flex flex-col gap-3 sm:flex-row ${isEditing ? '' : 'hidden'}`}
-                    >
+                    <div className={`flex flex-col gap-3 sm:flex-row ${isEditing ? '' : 'hidden'}`}>
                       <input
                         className="input input-bordered w-full"
                         value={editingValue}
@@ -644,7 +636,7 @@ const TodoApp: FC = () => {
                         }}
                         onKeydown={(event: KeyboardEvent) => {
                           if (event.key === 'Enter') {
-                            commitEditing((event.target as HTMLInputElement).value)
+                            saveEditing(item.id)
                           }
                           if (event.key === 'Escape') {
                             cancelEditing()
@@ -654,13 +646,7 @@ const TodoApp: FC = () => {
                       <div className="flex gap-2">
                         <button
                           className="btn btn-primary btn-sm"
-                          onClick={(event: any) => {
-                            const editRow = (event.currentTarget as HTMLElement).closest(
-                              '[data-todo-edit-row="true"]',
-                            ) as HTMLElement | null
-                            const input = editRow?.querySelector('input') as HTMLInputElement | null
-                            commitEditing(input?.value ?? editingValue)
-                          }}
+                          onClick={() => saveEditing(item.id)}
                           type="button"
                         >
                           保存

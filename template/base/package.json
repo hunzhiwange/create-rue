@@ -14,18 +14,18 @@
     "format-check": "oxfmt --check ."
   },
   "dependencies": {
-    "@rue-js/jsx-runtime": "^0.1.1",
-    "@rue-js/router": "^0.1.1",
-    "@rue-js/rue": "^0.1.1",
-    "@rue-js/runtime": "^0.1.1",
-    "@rue-js/runtime-vapor": "^0.1.1",
+    "@rue-js/jsx-runtime": "^0.3.10",
+    "@rue-js/router": "^0.3.10",
+    "@rue-js/rue": "^0.3.10",
+    "@rue-js/runtime": "^0.3.10",
+    "@rue-js/runtime-vapor": "^0.3.10",
     "daisyui": "^5.5.19",
     "oxfmt": "^0.48.0",
     "oxlint": "^1.63.0"
   },
   "devDependencies": {
-    "@rue-js/jsx-dev-runtime": "^0.1.1",
-    "@rue-js/vite-plugin-rue": "^0.1.1",
+    "@rue-js/jsx-dev-runtime": "^0.3.10",
+    "@rue-js/vite-plugin-rue": "^0.3.10",
     "@swc/core": "^1.15.33",
     "@tailwindcss/typography": "^0.5.19",
     "@tailwindcss/vite": "^4.3.0",

@@ -3,6 +3,7 @@
   "include": ["index.ts", "utils/**/*"],
   "compilerOptions": {
     "strict": false,
+    "strictNullChecks": true,
     "resolveJsonModule": true,
     "moduleResolution": "Bundler",
     "module": "ESNext",
