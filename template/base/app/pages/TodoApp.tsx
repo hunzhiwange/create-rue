@@ -72,7 +72,7 @@ const getStoredTodos = (): TodoItem[] => {
     }
 
     return parsed.filter(
-      (item) =>
+      item =>
         item &&
         typeof item.id === 'number' &&
         typeof item.title === 'string' &&
@@ -121,7 +121,7 @@ const EditingTitleInput: FC<{
   initialTitle: string
   onSave: (title: string) => void
   onCancel: () => void
-}> = (props) => {
+}> = props => {
   const [title, setTitle] = useState(props.initialTitle)
 
   return (
@@ -170,17 +170,17 @@ const TodoApp: FC = () => {
   )
 
   const counts = computed(() => ({
-    total: todos.value.filter((item) => !item.archived).length,
-    todo: todos.value.filter((item) => !item.archived && item.status === 'todo').length,
-    doing: todos.value.filter((item) => !item.archived && item.status === 'doing').length,
-    done: todos.value.filter((item) => !item.archived && item.status === 'done').length,
-    archived: todos.value.filter((item) => item.archived).length,
+    total: todos.value.filter(item => !item.archived).length,
+    todo: todos.value.filter(item => !item.archived && item.status === 'todo').length,
+    doing: todos.value.filter(item => !item.archived && item.status === 'doing').length,
+    done: todos.value.filter(item => !item.archived && item.status === 'done').length,
+    archived: todos.value.filter(item => item.archived).length,
   }))
 
   const visibleTodos = computed(() => {
     const keyword = search.value.trim().toLowerCase()
 
-    return todos.value.filter((item) => {
+    return todos.value.filter(item => {
       const matchesKeyword = !keyword || item.title.toLowerCase().includes(keyword)
       if (!matchesKeyword) {
         return false
@@ -222,20 +222,20 @@ const TodoApp: FC = () => {
   }
 
   const removeTodo = (id: number) => {
-    todos.value = todos.value.filter((item) => item.id !== id)
+    todos.value = todos.value.filter(item => item.id !== id)
     if (editingId.value === id) {
       editingId.value = null
     }
   }
 
   const updateStatus = (id: number, status: TodoStatus) => {
-    todos.value = todos.value.map((item) =>
+    todos.value = todos.value.map(item =>
       item.id === id ? { ...item, status, archived: false } : item,
     )
   }
 
   const toggleArchived = (id: number) => {
-    todos.value = todos.value.map((item) =>
+    todos.value = todos.value.map(item =>
       item.id === id ? { ...item, archived: !item.archived } : item,
     )
   }
@@ -253,7 +253,7 @@ const TodoApp: FC = () => {
       return
     }
 
-    todos.value = todos.value.map((item) => (item.id === id ? { ...item, title } : item))
+    todos.value = todos.value.map(item => (item.id === id ? { ...item, title } : item))
     cancelEditing()
   }
 
@@ -332,7 +332,7 @@ const TodoApp: FC = () => {
           </div>
 
           <div className="flex flex-wrap gap-2">
-            {filterOptions.map((filter) => (
+            {filterOptions.map(filter => (
               <button
                 key={filter.key}
                 className={`btn btn-sm ${
@@ -367,103 +367,99 @@ const TodoApp: FC = () => {
       </section>
 
       <section className="grid gap-4">
-        {visibleTodos.get().length ? (
-          visibleTodos.get().map((item) => {
-            const meta = statusMeta[item.status]
-            const isEditing = editingId.value === item.id
+        {visibleTodos.get().map(item => {
+          const meta = statusMeta[item.status]
+          const isEditing = editingId.value === item.id
 
-            return (
-              <article
-                key={item.id}
-                className={`card border bg-base-100 shadow-sm transition-all ${meta.cardClass} ${
-                  item.archived ? 'opacity-75' : 'hover:-translate-y-0.5 hover:shadow-md'
-                }`}
-              >
-                <div className="card-body gap-4">
-                  <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-                    <div className="flex-1 space-y-3">
-                      <div className="flex flex-wrap items-center gap-2">
-                        <span
-                          className={`inline-block h-2.5 w-2.5 rounded-full ${meta.dotClass}`}
-                        ></span>
-                        <span className={meta.badgeClass}>{meta.label}</span>
-                        {item.archived && (
-                          <span className="badge badge-secondary badge-outline">已归档</span>
-                        )}
-                        <span className="text-xs text-base-content/50">
-                          创建于 {item.createdAt}
-                        </span>
-                      </div>
-
-                      {!isEditing && (
-                        <h2
-                          className={`text-xl font-semibold ${
-                            item.status === 'done'
-                              ? 'text-base-content/50 line-through'
-                              : 'text-base-content'
-                          }`}
-                        >
-                          {item.title}
-                        </h2>
+          return (
+            <article
+              key={`${item.id}-${item.title}-${item.status}-${item.archived ? 'archived' : 'active'}-${
+                isEditing ? 'editing' : 'view'
+              }`}
+              className={`card border bg-base-100 shadow-sm transition-all ${meta.cardClass} ${
+                item.archived ? 'opacity-75' : 'hover:-translate-y-0.5 hover:shadow-md'
+              }`}
+            >
+              <div className="card-body gap-4">
+                <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+                  <div className="flex-1 space-y-3">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span
+                        className={`inline-block h-2.5 w-2.5 rounded-full ${meta.dotClass}`}
+                      ></span>
+                      <span className={meta.badgeClass}>{meta.label}</span>
+                      {item.archived && (
+                        <span className="badge badge-secondary badge-outline">已归档</span>
                       )}
-
-                      {isEditing && (
-                        <EditingTitleInput
-                          key={item.id}
-                          initialTitle={item.title}
-                          onSave={(title) => saveEditing(item.id, title)}
-                          onCancel={cancelEditing}
-                        />
-                      )}
-
-                      <div className="flex flex-wrap gap-2">
-                        {statusOptions.map((option) => (
-                          <button
-                            key={option.key}
-                            className={`btn btn-xs ${
-                              item.status === option.key
-                                ? 'btn-neutral'
-                                : 'btn-ghost border border-base-300'
-                            }`}
-                            onClick={() => updateStatus(item.id, option.key)}
-                          >
-                            {option.label}
-                          </button>
-                        ))}
-                      </div>
+                      <span className="text-xs text-base-content/50">创建于 {item.createdAt}</span>
                     </div>
 
-                    <div className="flex flex-wrap gap-2 lg:justify-end">
-                      {!isEditing && (
+                    {!isEditing && (
+                      <h2
+                        className={`text-xl font-semibold ${
+                          item.status === 'done'
+                            ? 'text-base-content/50 line-through'
+                            : 'text-base-content'
+                        }`}
+                      >
+                        {item.title}
+                      </h2>
+                    )}
+
+                    {isEditing && (
+                      <EditingTitleInput
+                        key={item.id}
+                        initialTitle={item.title}
+                        onSave={title => saveEditing(item.id, title)}
+                        onCancel={cancelEditing}
+                      />
+                    )}
+
+                    <div className="flex flex-wrap gap-2">
+                      {statusOptions.map(option => (
                         <button
-                          className="btn btn-sm btn-outline"
-                          onClick={() => startEditing(item)}
+                          key={option.key}
+                          className={`btn btn-xs ${
+                            item.status === option.key
+                              ? 'btn-neutral'
+                              : 'btn-ghost border border-base-300'
+                          }`}
+                          onClick={() => updateStatus(item.id, option.key)}
                         >
-                          改名
+                          {option.label}
                         </button>
-                      )}
-                      <button
-                        className="btn btn-sm btn-outline btn-secondary"
-                        onClick={() => toggleArchived(item.id)}
-                      >
-                        {item.archived ? '恢复' : '归档'}
-                      </button>
-                      <button
-                        className="btn btn-sm btn-outline btn-error"
-                        onClick={() => removeTodo(item.id)}
-                      >
-                        删除
-                      </button>
+                      ))}
                     </div>
                   </div>
+
+                  <div className="flex flex-wrap gap-2 lg:justify-end">
+                    {!isEditing && (
+                      <button className="btn btn-sm btn-outline" onClick={() => startEditing(item)}>
+                        改名
+                      </button>
+                    )}
+                    <button
+                      className="btn btn-sm btn-outline btn-secondary"
+                      onClick={() => toggleArchived(item.id)}
+                    >
+                      {item.archived ? '恢复' : '归档'}
+                    </button>
+                    <button
+                      className="btn btn-sm btn-outline btn-error"
+                      onClick={() => removeTodo(item.id)}
+                    >
+                      删除
+                    </button>
+                  </div>
                 </div>
-              </article>
-            )
-          })
-        ) : (
+              </div>
+            </article>
+          )
+        })}
+        {!visibleTodos.get().length && (
           <div className="card border border-dashed border-base-300 bg-base-100 shadow-sm">
             <div className="card-body items-center py-14 text-center">
-              <h2 className="text-xl font-semibold">当前筛选下没有任务</h2>
+              <h3 className="text-xl font-semibold">当前筛选下没有任务</h3>
               <p className="max-w-md text-sm leading-6 text-base-content/70">
                 试试切换筛选、搜索关键字，或者直接新增一条任务。
               </p>

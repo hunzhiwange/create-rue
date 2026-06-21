@@ -27,6 +27,7 @@
     "@tailwindcss/typography": "^0.5.19",
     "@tailwindcss/vite": "^4.1.17",
     "@types/node": "^24.10.1",
+    "daisyui": "^5.5.23",
     "oxfmt": "^0.42.0",
     "oxlint": "^1.57.0",
     "typescript": "^5.9.3",
