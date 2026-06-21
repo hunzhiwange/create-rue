@@ -11,7 +11,7 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": false,
-    "types": ["vite/client", "@rue-js/rue/jsx", "node"],
+    "types": ["vitest/globals"],
     "jsx": "react-jsx",
     "jsxImportSource": "@rue-js",
     "declaration": true,
