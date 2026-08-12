@@ -53,29 +53,29 @@ importers:
   template/base:
     dependencies:
       '@rue-js/design':
-        specifier: ^0.8.1
+        specifier: ^0.8.5
         version: 0.8.2(typescript@7.0.2)
       '@rue-js/jsx-runtime':
-        specifier: ^0.8.1
+        specifier: ^0.8.5
         version: 0.8.2(typescript@7.0.2)
       '@rue-js/router':
-        specifier: ^0.8.1
+        specifier: ^0.8.5
         version: 0.8.2(typescript@7.0.2)
       '@rue-js/rue':
-        specifier: ^0.8.1
+        specifier: ^0.8.5
         version: 0.8.2(typescript@7.0.2)
       '@rue-js/runtime':
-        specifier: ^0.8.1
+        specifier: ^0.8.5
         version: 0.8.2(typescript@7.0.2)
       '@rue-js/runtime-vapor':
-        specifier: ^0.8.1
+        specifier: ^0.8.5
         version: 0.8.2
     devDependencies:
       '@rue-js/jsx-dev-runtime':
-        specifier: ^0.8.1
+        specifier: ^0.8.5
         version: 0.8.2(typescript@7.0.2)
       '@rue-js/vite-plugin-rue':
-        specifier: ^0.8.1
+        specifier: ^0.8.5
         version: 0.8.2(typescript@7.0.2)
       '@swc/core':
         specifier: ^1.15.3
