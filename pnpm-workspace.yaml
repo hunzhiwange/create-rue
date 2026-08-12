@@ -5,9 +5,9 @@ allowBuilds:
   cypress: false
   esbuild: false
 catalog:
-  vite: npm:@voidzero-dev/vite-plus-core@latest
-  vitest: npm:@voidzero-dev/vite-plus-test@latest
-  vite-plus: latest
+  vite: npm:@voidzero-dev/vite-plus-core@0.2.5
+  vitest: 4.1.10
+  vite-plus: 0.2.5
 dedupePeers: true
 overrides:
   vite: 'catalog:'

@@ -72,7 +72,7 @@ const getStoredTodos = (): TodoItem[] => {
     }
 
     return parsed.filter(
-      item =>
+      (item) =>
         item &&
         typeof item.id === 'number' &&
         typeof item.title === 'string' &&
@@ -121,7 +121,7 @@ const EditingTitleInput: FC<{
   initialTitle: string
   onSave: (title: string) => void
   onCancel: () => void
-}> = props => {
+}> = (props) => {
   const [title, setTitle] = useState(props.initialTitle)
 
   return (
@@ -170,17 +170,17 @@ const TodoApp: FC = () => {
   )
 
   const counts = computed(() => ({
-    total: todos.value.filter(item => !item.archived).length,
-    todo: todos.value.filter(item => !item.archived && item.status === 'todo').length,
-    doing: todos.value.filter(item => !item.archived && item.status === 'doing').length,
-    done: todos.value.filter(item => !item.archived && item.status === 'done').length,
-    archived: todos.value.filter(item => item.archived).length,
+    total: todos.value.filter((item) => !item.archived).length,
+    todo: todos.value.filter((item) => !item.archived && item.status === 'todo').length,
+    doing: todos.value.filter((item) => !item.archived && item.status === 'doing').length,
+    done: todos.value.filter((item) => !item.archived && item.status === 'done').length,
+    archived: todos.value.filter((item) => item.archived).length,
   }))
 
   const visibleTodos = computed(() => {
     const keyword = search.value.trim().toLowerCase()
 
-    return todos.value.filter(item => {
+    return todos.value.filter((item) => {
       const matchesKeyword = !keyword || item.title.toLowerCase().includes(keyword)
       if (!matchesKeyword) {
         return false
@@ -222,20 +222,20 @@ const TodoApp: FC = () => {
   }
 
   const removeTodo = (id: number) => {
-    todos.value = todos.value.filter(item => item.id !== id)
+    todos.value = todos.value.filter((item) => item.id !== id)
     if (editingId.value === id) {
       editingId.value = null
     }
   }
 
   const updateStatus = (id: number, status: TodoStatus) => {
-    todos.value = todos.value.map(item =>
+    todos.value = todos.value.map((item) =>
       item.id === id ? { ...item, status, archived: false } : item,
     )
   }
 
   const toggleArchived = (id: number) => {
-    todos.value = todos.value.map(item =>
+    todos.value = todos.value.map((item) =>
       item.id === id ? { ...item, archived: !item.archived } : item,
     )
   }
@@ -253,7 +253,7 @@ const TodoApp: FC = () => {
       return
     }
 
-    todos.value = todos.value.map(item => (item.id === id ? { ...item, title } : item))
+    todos.value = todos.value.map((item) => (item.id === id ? { ...item, title } : item))
     cancelEditing()
   }
 
@@ -332,7 +332,7 @@ const TodoApp: FC = () => {
           </div>
 
           <div className="flex flex-wrap gap-2">
-            {filterOptions.map(filter => (
+            {filterOptions.map((filter) => (
               <button
                 key={filter.key}
                 className={`btn btn-sm ${
@@ -367,7 +367,7 @@ const TodoApp: FC = () => {
       </section>
 
       <section className="grid gap-4">
-        {visibleTodos.get().map(item => {
+        {visibleTodos.get().map((item) => {
           const meta = statusMeta[item.status]
           const isEditing = editingId.value === item.id
 
@@ -410,13 +410,13 @@ const TodoApp: FC = () => {
                       <EditingTitleInput
                         key={item.id}
                         initialTitle={item.title}
-                        onSave={title => saveEditing(item.id, title)}
+                        onSave={(title) => saveEditing(item.id, title)}
                         onCancel={cancelEditing}
                       />
                     )}
 
                     <div className="flex flex-wrap gap-2">
-                      {statusOptions.map(option => (
+                      {statusOptions.map((option) => (
                         <button
                           key={option.key}
                           className={`btn btn-xs ${
