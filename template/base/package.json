@@ -13,16 +13,16 @@
     "format-check": "oxfmt --check ."
   },
   "dependencies": {
-    "@rue-js/design": "^0.8.5",
-    "@rue-js/jsx-runtime": "^0.8.5",
-    "@rue-js/router": "^0.8.5",
-    "@rue-js/rue": "^0.8.5",
-    "@rue-js/runtime": "^0.8.5",
-    "@rue-js/runtime-vapor": "^0.8.5"
+    "@rue-js/design": "^0.8.8",
+    "@rue-js/jsx-runtime": "^0.8.8",
+    "@rue-js/router": "^0.8.8",
+    "@rue-js/rue": "^0.8.8",
+    "@rue-js/runtime": "^0.8.8",
+    "@rue-js/runtime-vapor": "^0.8.8"
   },
   "devDependencies": {
-    "@rue-js/jsx-dev-runtime": "^0.8.5",
-    "@rue-js/vite-plugin-rue": "^0.8.5",
+    "@rue-js/jsx-dev-runtime": "^0.8.8",
+    "@rue-js/vite-plugin-rue": "^0.8.8",
     "@swc/core": "^1.15.3",
     "@tailwindcss/typography": "^0.5.19",
     "@tailwindcss/vite": "^4.1.17",
