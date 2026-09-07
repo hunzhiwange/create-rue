@@ -368,7 +368,7 @@ const TodoApp: FC = () => {
   watchEffect(() => {
     persistTodoState({
       todos,
-      search: search.value,
+      search,
       activeFilter: activeFilter.value,
     })
   })
@@ -384,7 +384,7 @@ const TodoApp: FC = () => {
   })
 
   const visibleTodos = computed(() => {
-    const keyword = search.value.trim().toLowerCase()
+    const keyword = search.trim().toLowerCase()
 
     return todos
       .filter((item) => {
@@ -418,7 +418,7 @@ const TodoApp: FC = () => {
   })
 
   const addTodo = () => {
-    const title = draft.value.trim()
+    const title = draft.trim()
     if (!title) {
       return
     }
@@ -438,7 +438,7 @@ const TodoApp: FC = () => {
 
   const removeTodo = (id: number) => {
     setTodos((current) => current.filter((item) => item.id !== id))
-    if (editingId.value === id) {
+    if (editingId === id) {
       setEditingId(null)
       setEditingTitle('')
     }
@@ -467,7 +467,7 @@ const TodoApp: FC = () => {
   }
 
   const saveEditing = (id: number, titleOverride?: string) => {
-    const title = (titleOverride ?? editingTitle.value).trim()
+    const title = (titleOverride ?? editingTitle).trim()
     if (!title) {
       return
     }
@@ -518,7 +518,7 @@ const TodoApp: FC = () => {
               <div className="join w-full">
                 <input
                   className="input input-bordered join-item w-full"
-                  value={draft.value}
+                  value={draft}
                   placeholder="例如：把日报页接入真实 API"
                   onInput={(event: any) => {
                     setDraft((event.target as HTMLInputElement).value)
@@ -542,7 +542,7 @@ const TodoApp: FC = () => {
               </div>
               <input
                 className="input input-bordered w-full"
-                value={search.value}
+                value={search}
                 placeholder="按标题筛选任务"
                 onInput={(event: any) => {
                   setSearch((event.target as HTMLInputElement).value)
@@ -588,8 +588,8 @@ const TodoApp: FC = () => {
 
       <section className="grid gap-4">
         {visibleTodos.get().map((item) => {
-          const isEditing = editingId.value === item.id
-          const editingValue = isEditing ? editingTitle.value : item.title
+          const isEditing = editingId === item.id
+          const editingValue = isEditing ? editingTitle : item.title
           const meta = statusMeta[item.status]
 
           const commitEditing = (latestValue: string) => {

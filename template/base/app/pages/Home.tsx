@@ -36,7 +36,7 @@ const Home: FC = () => (
         <div className="max-w-3xl space-y-4">
           <div className="badge badge-primary badge-outline">Rue.js</div>
           <h1 className="text-4xl font-semibold tracking-tight sm:text-5xl">
-            The Wasm Framework For Vapor Native DOM
+            The Compiler Framework For Native DOM
           </h1>
           <p className="max-w-2xl text-base leading-7 text-base-content/70">
             Rue.js 采用原生 JSX / TSX 开发方式，结合细粒度响应式与面向原生 DOM

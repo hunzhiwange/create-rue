@@ -17,6 +17,9 @@ export default defineConfig({
     categories: {
       correctness: 'error',
     },
+    rules: {
+      '@typescript-eslint/no-useless-default-assignment': 'off',
+    },
     ignorePatterns: ['template/**'],
     options: {
       typeAware: true,
