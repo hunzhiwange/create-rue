@@ -14,8 +14,12 @@
     "format-check": "oxfmt --check ."
   },
   "dependencies": {
+    "@rue-js/design": "^0.9.7",
+    "@rue-js/jsx-runtime": "^0.8.21",
     "@rue-js/router": "^0.9.7",
     "@rue-js/rue": "^0.9.7",
+    "@rue-js/runtime": "^0.9.7",
+    "@rue-js/runtime-vapor": "^0.8.21",
     "daisyui": "^5.7.28",
     "oxfmt": "^0.66.0",
     "oxlint": "^1.81.0"
