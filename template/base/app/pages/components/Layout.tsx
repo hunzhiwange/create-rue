@@ -151,7 +151,7 @@ const ThemePicker: FC = () => {
         theme.value = (event.currentTarget as HTMLSelectElement).value
       }}
     >
-      {themes.map((name) => (
+      {themes.map(name => (
         <option key={name} value={name}>
           {themeLabels[name] || name}
         </option>
@@ -170,7 +170,7 @@ const Header: FC = () => {
     const path = currentPath.get()
     const navLinks = document.querySelectorAll<HTMLElement>('[data-base-nav-path]')
 
-    navLinks.forEach((link) => {
+    navLinks.forEach(link => {
       const targetPath = link.dataset.baseNavPath || ''
       link.className = `btn btn-sm ${path === targetPath ? 'btn-primary' : 'btn-ghost'}`.trim()
     })
@@ -201,7 +201,7 @@ const Header: FC = () => {
           </RouterLink>
         </div>
         <nav className="order-3 flex w-full flex-wrap gap-2 md:order-none md:w-auto md:flex-1 md:justify-center">
-          {navItems.map((item) => (
+          {navItems.map(item => (
             <RouterLink
               key={item.to}
               to={item.to}
@@ -235,7 +235,7 @@ const Footer: FC = () => (
   </footer>
 )
 
-const HeaderToggleButton: FC<{ hidden: boolean; onToggle: () => void }> = (props) => (
+const HeaderToggleButton: FC<{ hidden: boolean; onToggle: () => void }> = props => (
   <button
     type="button"
     className="btn btn-circle btn-sm fixed left-3 top-3 z-50 border-base-300 bg-base-100/95 text-base-content shadow-lg backdrop-blur"
@@ -279,7 +279,7 @@ const HeaderToggleButton: FC<{ hidden: boolean; onToggle: () => void }> = (props
   </button>
 )
 
-const SiteLayout: FC = (props) => {
+const SiteLayout: FC = props => {
   const route = useRoute()
   const currentPath = computed(() => route.get()?.path || '/')
   const allowHeaderToggle = computed(() => headerToggleRoutes.includes(currentPath.get()))
@@ -288,7 +288,7 @@ const SiteLayout: FC = (props) => {
 
   watch(
     () => currentPath.get(),
-    (path) => {
+    path => {
       reportHeaderHidden.value = allowHeaderToggle.get() ? getStoredHeaderHidden(path) : false
     },
   )

@@ -12,8 +12,7 @@
     "isolatedModules": true,
     "noEmit": false,
     "types": ["vite/client", "@rue-js/rue/jsx", "node"],
-    "jsx": "react-jsx",
-    "jsxImportSource": "@rue-js",
+    "jsx": "preserve",
     "declaration": true,
     "outDir": "./dist"
   },

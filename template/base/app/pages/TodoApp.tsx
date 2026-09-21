@@ -1,4 +1,4 @@
-import { computed, type FC, ref, useState, watch } from '@rue-js/rue'
+import { computed, type FC, ref, watch } from '@rue-js/rue'
 import { RouterLink } from '@rue-js/router'
 
 const todoStorageKey = 'rue.base.todos'
@@ -122,19 +122,19 @@ const EditingTitleInput: FC<{
   onSave: (title: string) => void
   onCancel: () => void
 }> = props => {
-  const [title, setTitle] = useState(props.initialTitle)
+  const title = ref(props.initialTitle)
 
   return (
     <div className="flex flex-col gap-3 sm:flex-row">
       <input
         className="input input-bordered w-full"
-        value={title}
+        value={title.value}
         onInput={(event: any) => {
-          setTitle((event.target as HTMLInputElement).value)
+          title.value = (event.target as HTMLInputElement).value
         }}
         onKeydown={(event: KeyboardEvent) => {
           if (event.key === 'Enter') {
-            props.onSave(title.trim())
+            props.onSave(title.value.trim())
           }
           if (event.key === 'Escape') {
             props.onCancel()
@@ -142,7 +142,10 @@ const EditingTitleInput: FC<{
         }}
       />
       <div className="flex gap-2">
-        <button className="btn btn-primary btn-sm" onClick={() => props.onSave(title.trim())}>
+        <button
+          className="btn btn-primary btn-sm"
+          onClick={() => props.onSave(title.value.trim())}
+        >
           保存
         </button>
         <button className="btn btn-ghost btn-sm" onClick={props.onCancel}>

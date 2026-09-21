@@ -66,7 +66,7 @@ const Home: FC = () => (
     </section>
 
     <section className="grid gap-4 md:grid-cols-3">
-      {highlights.map((item) => (
+      {highlights.map(item => (
         <article key={item.title} className="card border border-base-300 bg-base-100 shadow-sm">
           <div className="card-body gap-3">
             <h2 className="text-2xl font-semibold">{item.title}</h2>
@@ -85,7 +85,7 @@ const Home: FC = () => (
           </div>
 
           <div className="mockup-code text-sm">
-            {quickStartCommands.map((command) => (
+            {quickStartCommands.map(command => (
               <pre key={command} data-prefix="$">
                 <code>{command}</code>
               </pre>
@@ -116,7 +116,7 @@ const Home: FC = () => (
           </div>
 
           <div className="space-y-3">
-            {nextSteps.map((step) => (
+            {nextSteps.map(step => (
               <div
                 key={step}
                 className="rounded-2xl bg-base-200 p-4 text-sm leading-7 text-base-content/75"
